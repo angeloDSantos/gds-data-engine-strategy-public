@@ -117,8 +117,12 @@ export function DocsPage() {
                 <h4 className="font-semibold text-primary">Key Efficiency Gains:</h4>
                 <ul className="list-disc space-y-2 pl-5">
                   <li><strong>Cheaper-Tools-First:</strong> Verification is only run on generated candidates, stopping the waterfall the second a valid signal is found.</li>
+                  <li><strong>Active Rotation:</strong> We pivot our stack based on campaign goals. For example, if a campaign requires a high volume of direct dials, we rotate our core mobile stack to <strong>SalesIntel</strong>—known for high-accuracy dials at a significantly lower unit cost than premium fallbacks.</li>
                   <li><strong>Credit Memory:</strong> Every successful resolution improves the pattern recognition system for the next campaign.</li>
                 </ul>
+                <p className="mt-4 text-brand font-medium">
+                  This technical agility, combined with a unified database that "self-improves" with every credit used, is how we transition from relying on vendors to owning a <strong>self-serving lead generation machine.</strong>
+                </p>
               </div>
             </div>
           )}

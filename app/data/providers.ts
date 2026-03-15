@@ -16,7 +16,8 @@ export type ProviderId =
     | "internal"
     | "clay"
     | "crunchbase"
-    | "hlr_lookup";
+    | "hlr_lookup"
+    | "salesintel";
 
 export type RoleInLayer = {
     role: string;
@@ -324,6 +325,21 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         weaknesses: ["Latency"],
         rolesByLayer: {
             layer_8: { role: "Connectivity Check", costEffect: "low", confidenceEffect: "very_high", description: "Performs real-time HLR lookup to verify if a line is active." },
+        },
+    },
+    salesintel: {
+        id: "salesintel",
+        name: "SalesIntel",
+        website: "https://salesintel.io",
+        category: "enrichment",
+        tier: "mid",
+        pricingModel: { type: "usage", unitCost: 0.10 },
+        truthLevel: "derived_efficiency_estimate",
+        accuracyPercent: 92,
+        strengths: ["High-quality direct dials", "Strong research team", "Cost-effective mobile data"],
+        weaknesses: ["Smaller database than ZoomInfo", "B2B focused"],
+        rolesByLayer: {
+            layer_8: { role: "Direct Dial Focus", costEffect: "medium", confidenceEffect: "very_high", description: "Primary source for high-accuracy direct dial campaigns." },
         },
     },
 };
