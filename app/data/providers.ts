@@ -50,6 +50,7 @@ export interface ProviderConfig {
     strengths: string[];
     weaknesses: string[];
     packageNote?: string;
+    accuracyPercent?: number;
     rolesByLayer: Partial<Record<string, RoleInLayer>>;
 }
 
@@ -60,8 +61,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://apollo.io",
         category: "all-in-one",
         tier: "cheap",
-        pricingModel: { type: "seatContract", annualContract: 6000, seats: 5, includedCredits: 150000 },
+        pricingModel: { type: "usage", unitCost: 0.02 }, // Updated from seatContract to usage benchmark as per CSV
         truthLevel: "derived_efficiency_estimate",
+        accuracyPercent: 80,
         strengths: ["Massive database", "Strong filtering", "Cost-effective"],
         weaknesses: ["Email accuracy can vary", "Mobile data is secondary"],
         rolesByLayer: {
@@ -76,8 +78,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://peopledatalabs.com",
         category: "enrichment",
         tier: "mid",
-        pricingModel: { type: "usage", unitCost: 0.18 },
+        pricingModel: { type: "usage", unitCost: 0.12 },
         truthLevel: "official_partial",
+        accuracyPercent: 85,
         strengths: ["Developer-grade API", "Deep identity graph", "Resume history"],
         weaknesses: ["Requires technical integration", "No built-in UI"],
         rolesByLayer: {
@@ -91,9 +94,10 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://rocketreach.co",
         category: "enrichment",
         tier: "mid",
-        pricingModel: { type: "quote", benchmarkUnitCost: 0.05 },
+        pricingModel: { type: "quote", benchmarkUnitCost: 0.16 },
         truthLevel: "internal_benchmark_only",
         packageNote: "$2099 for 10k lookups for mobile",
+        accuracyPercent: 85,
         strengths: ["High-quality mobile data", "Browser extension", "Wide social coverage"],
         weaknesses: ["More expensive per lead", "Lower bulk throughput"],
         rolesByLayer: {
@@ -107,8 +111,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://prospeo.io",
         category: "enrichment",
         tier: "cheap",
-        pricingModel: { type: "planCredits", planCost: 444, includedUnits: 5000 },
+        pricingModel: { type: "usage", unitCost: 0.005 },
         truthLevel: "derived_efficiency_estimate",
+        accuracyPercent: 90,
         strengths: ["Highest email accuracy", "Catch-all resolution", "LinkedIn focus"],
         weaknesses: ["Strictly professional email", "Credit burn rate"],
         rolesByLayer: {
@@ -150,8 +155,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://neverbounce.com",
         category: "verification",
         tier: "verification",
-        pricingModel: { type: "quote", benchmarkUnitCost: 0.003 },
+        pricingModel: { type: "usage", unitCost: 0.001 },
         truthLevel: "internal_benchmark_only",
+        accuracyPercent: 99.1,
         strengths: ["Gold standard accuracy", "Enterprise integration"],
         weaknesses: ["High cost", "No catch-all classification"],
         rolesByLayer: {
@@ -164,8 +170,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://zerobounce.net",
         category: "verification",
         tier: "verification",
-        pricingModel: { type: "quote", benchmarkUnitCost: 0.00225 },
+        pricingModel: { type: "usage", unitCost: 0.005 },
         truthLevel: "internal_benchmark_only",
+        accuracyPercent: 98,
         strengths: ["High accuracy", "AI-driven scoring"],
         weaknesses: ["Expensive at scale"],
         rolesByLayer: {
@@ -178,8 +185,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://cognism.com",
         category: "enrichment",
         tier: "premium",
-        pricingModel: { type: "quote", benchmarkUnitCost: 0.65 },
+        pricingModel: { type: "usage", unitCost: 0.12 }, // Updated from 0.65 to 0.12 based on CSV
         truthLevel: "manual_quote_required",
+        accuracyPercent: 90,
         strengths: ["Compliant European data", "High-quality phone numbers"],
         weaknesses: ["Very high cost", "Strict usage policies"],
         rolesByLayer: {
@@ -193,8 +201,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://lusha.com",
         category: "enrichment",
         tier: "premium",
-        pricingModel: { type: "quote", benchmarkUnitCost: 0.55 },
+        pricingModel: { type: "usage", unitCost: 0.04 }, // Updated from 0.55 to 0.04 based on CSV
         truthLevel: "manual_quote_required",
+        accuracyPercent: 85,
         strengths: ["Excellent mobile data", "Browser extension"],
         weaknesses: ["Expensive", "Database can be outdated"],
         rolesByLayer: {
@@ -207,8 +216,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://twilio.com",
         category: "phone",
         tier: "phone",
-        pricingModel: { type: "usage", unitCost: 0.008 },
+        pricingModel: { type: "usage", unitCost: 0.004 },
         truthLevel: "official_public",
+        accuracyPercent: 95,
         strengths: ["Carrier-level data", "Line type identification"],
         weaknesses: ["Does not provide the number, only validates existing"],
         rolesByLayer: {
@@ -221,8 +231,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://telesign.com",
         category: "phone",
         tier: "phone",
-        pricingModel: { type: "quote", benchmarkUnitCost: 0.02 },
+        pricingModel: { type: "usage", unitCost: 0.006 }, // Updated from 0.02 to 0.006 (HLR lookup)
         truthLevel: "manual_quote_required",
+        accuracyPercent: 97,
         strengths: ["Global coverage", "Risk scoring"],
         weaknesses: ["Complex API pricing"],
         rolesByLayer: {
@@ -249,8 +260,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://uplead.com",
         category: "enrichment",
         tier: "mid",
-        pricingModel: { type: "planCredits", planCost: 1200, includedUnits: 6000 },
+        pricingModel: { type: "usage", unitCost: 0.35 },
         truthLevel: "official_public",
+        accuracyPercent: 95,
         strengths: ["Verified records in real-time"],
         weaknesses: ["Smaller database size"],
         rolesByLayer: {},
@@ -261,8 +273,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://zoominfo.com",
         category: "all-in-one",
         tier: "premium",
-        pricingModel: { type: "quote", benchmarkUnitCost: 0.50 },
+        pricingModel: { type: "usage", unitCost: 1.25 }, // Email contact base
         truthLevel: "manual_quote_required",
+        accuracyPercent: 88,
         strengths: ["Vast enterprise database"],
         weaknesses: ["Very expensive", "Aggressive sales"],
         rolesByLayer: {},
@@ -288,8 +301,9 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://crunchbase.com",
         category: "enrichment",
         tier: "mid",
-        pricingModel: { type: "usage", unitCost: 0.15 },
+        pricingModel: { type: "usage", unitCost: 0.02 },
         truthLevel: "official_partial",
+        accuracyPercent: 90,
         strengths: ["Funding data", "Company signals", "Growth triggers"],
         weaknesses: ["Contact data secondary"],
         rolesByLayer: {

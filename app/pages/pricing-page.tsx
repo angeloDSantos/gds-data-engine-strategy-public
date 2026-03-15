@@ -52,7 +52,8 @@ export function PricingPage() {
                   <tr className="bg-secondary/30 border-b border-secondary">
                     <th className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-tertiary">Provider</th>
                     <th className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-tertiary">Tier</th>
-                    <th className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-tertiary">Unit Cost (v/our model)</th>
+                    <th className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-tertiary">Accuracy</th>
+                    <th className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-tertiary">Unit Cost</th>
                     <th className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-tertiary">Actual Package / Plan</th>
                   </tr>
                 </thead>
@@ -79,6 +80,19 @@ export function PricingPage() {
                         )}>
                           {config.tier}
                         </span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-1.5">
+                          <div className="text-sm font-bold text-primary">
+                            {config.accuracyPercent ? `${config.accuracyPercent}%` : "—"}
+                          </div>
+                          <div className="h-1 w-12 rounded-full bg-secondary overflow-hidden">
+                            <div 
+                              className="h-full bg-success-500" 
+                              style={{ width: `${config.accuracyPercent || 0}%` }}
+                            />
+                          </div>
+                        </div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="text-sm font-semibold text-primary">
@@ -120,6 +134,9 @@ export function PricingPage() {
                         Self-Improver
                       </span>
                     </td>
+                    <td className="px-4 py-4 text-sm font-bold text-success-600">
+                      99.9%
+                    </td>
                     <td className="px-4 py-4">
                       <div className="text-sm font-bold text-success-600">$0.0000</div>
                       <div className="text-[10px] text-success-700 italic font-medium">Marginal cost after resolution</div>
@@ -154,6 +171,38 @@ export function PricingPage() {
               </div>
               <p className="text-xs text-secondary leading-relaxed">
                 For every 100k mobile lookups we perform, we effectively "buy" that data once. In Year 2, the resolution occurs against our Internal Master DB, reducing the $2.5M identity resolution spend significantly as hit rates move internal.
+              </p>
+            </div>
+          </section>
+
+          {/* Waterfall Effect Strategy */}
+          <section className="rounded-2xl border border-secondary bg-secondary_subtle p-8 space-y-6">
+            <div className="flex items-center gap-3">
+              <Zap className="size-6 text-brand" />
+              <h2 className="text-xl font-bold text-primary">The Waterfall Strategy</h2>
+            </div>
+            
+            <div className="grid gap-4 md:grid-cols-5">
+              {[
+                { step: 1, label: "Cheap Providers", desc: "First pass using lowest-cost databases." },
+                { step: 2, label: "Pattern Engine", desc: "Test against known corporate naming logic." },
+                { step: 3, label: "Free Lookups", desc: "Check availability without credit burn." },
+                { step: 4, label: "Validation", desc: "Multi-signal SMTP handshake to confirm." },
+                { step: 5, label: "Premium Fallback", desc: "Expensive triggers only if all else fails." }
+              ].map((item) => (
+                <div key={item.step} className="relative flex flex-col gap-2 rounded-xl bg-primary p-4 shadow-sm border border-secondary">
+                  <div className="absolute -top-2 -left-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white">
+                    {item.step}
+                  </div>
+                  <div className="text-xs font-bold text-primary mt-2">{item.label}</div>
+                  <div className="text-[10px] text-tertiary leading-relaxed">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-xl bg-brand-secondary/20 p-4 border border-brand/10">
+              <p className="text-xs text-brand font-medium leading-relaxed">
+                <strong>Economic Impact:</strong> By routing 85% of traffic through the first 4 steps, we preserve premium credits for high-value targets, reducing the blended cost per lead by up to <strong>70%</strong> compared to single-provider stacks.
               </p>
             </div>
           </section>
