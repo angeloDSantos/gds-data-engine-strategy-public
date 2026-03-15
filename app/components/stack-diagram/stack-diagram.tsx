@@ -112,11 +112,6 @@ function StackDiagramInner() {
       setSelectedNode(node.id);
       setActiveStageId(node.id);
       
-      // If clicking a main layer in overview, enter detail view
-      if (!isDetailView && node.id.startsWith("layer_")) {
-        setSelectedLayer(node.id);
-      }
-      
       const nodeObj = nodes.find(n => n.id === node.id);
       if (nodeObj && !isDetailView) {
         reactFlow.fitView({
@@ -127,6 +122,15 @@ function StackDiagramInner() {
       }
     },
     [isDetailView, setSelectedNode, nodes, reactFlow]
+  );
+
+  const onNodeDoubleClick = useCallback(
+    (_: React.MouseEvent, node: { id: string }) => {
+      if (node.id.startsWith("layer_")) {
+        setSelectedLayer(node.id);
+      }
+    },
+    [setSelectedLayer]
   );
 
   const { setSelectedProvider } = useDiagramStore();
@@ -155,13 +159,6 @@ function StackDiagramInner() {
   const activeLayerPurpose = activeLayer?.purpose ?? null;
   const activeLayerNarrative = activeLayer?.narrative ?? null;
 
-  const onNodeDoubleClick = useCallback(
-    (_: React.MouseEvent, node: { id: string }) => {
-      setSelectedLayer(node.id);
-    },
-    [setSelectedLayer]
-  );
-
   return (
     <div className="h-full w-full rounded-lg border border-secondary bg-secondary_subtle overflow-hidden relative">
       <div className="absolute top-4 right-4 z-[100] flex gap-2">
@@ -179,6 +176,7 @@ function StackDiagramInner() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeDoubleClick}
         nodeTypes={nodeTypes}
         minZoom={0.1}
         maxZoom={2.5}
