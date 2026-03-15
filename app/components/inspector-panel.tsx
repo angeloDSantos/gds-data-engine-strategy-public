@@ -1,6 +1,7 @@
 "use client";
 
-import { X, ChevronRight, HelpCircle, Coins01, Activity, Zap } from "@untitledui/icons";
+import { X, ChevronRight, HelpCircle, Coins01, Activity, Zap, ChevronDown } from "@untitledui/icons";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/base/buttons/button";
 import { useDiagramStore } from "../store/diagram-store";
 import { providerConfigs, ProviderId } from "../data/providers";
@@ -250,9 +251,58 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                   </button>
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto relative" id="inspector-scroll-container">
                 <CostSummaryPanel />
+                <ScrollDownHint containerId="inspector-scroll-container" />
             </div>
         </div>
+    );
+}
+
+function ScrollDownHint({ containerId }: { containerId: string }) {
+    const [isVisible, setIsVisible] = useState(false);
+    const containerRef = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        containerRef.current = container;
+
+        const checkScroll = () => {
+            const { scrollTop, scrollHeight, clientHeight } = container;
+            const canScrollDown = scrollHeight > clientHeight + scrollTop + 10;
+            setIsVisible(canScrollDown);
+        };
+
+        container.addEventListener("scroll", checkScroll);
+        window.addEventListener("resize", checkScroll);
+        // Initial check
+        setTimeout(checkScroll, 100);
+
+        return () => {
+            container.removeEventListener("scroll", checkScroll);
+            window.removeEventListener("resize", checkScroll);
+        };
+    }, [containerId]);
+
+    const scrollToBottom = () => {
+        if (containerRef.current) {
+            containerRef.current.scrollTo({
+                top: containerRef.current.scrollHeight,
+                behavior: "smooth"
+            });
+        }
+    };
+
+    if (!isVisible) return null;
+
+    return (
+        <button
+            onClick={scrollToBottom}
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand text-white text-[10px] font-bold shadow-lg hover:bg-brand/90 transition-all animate-bounce ring-4 ring-primary/20"
+        >
+            <ChevronDown className="size-3" />
+            More Details
+        </button>
     );
 }

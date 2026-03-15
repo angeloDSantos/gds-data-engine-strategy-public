@@ -244,6 +244,18 @@ export function CostSummaryPanel() {
           theme="success"
         />
         <MetricCard
+          label="Mobile Accuracy (Raw)"
+          value={`${((metrics as any).accuracy_phone_pre * 100).toFixed(1)}%`}
+          subtext="Modeled source quality"
+          theme={(metrics as any).accuracy_phone_pre < 0.7 ? "warning" : "default"}
+        />
+        <MetricCard
+          label="Mobile Accuracy (Verified)"
+          value={`${((metrics as any).accuracy_phone_post * 100).toFixed(1)}%`}
+          subtext="After HLR & carrier check"
+          theme="success"
+        />
+        <MetricCard
           label="Identity data accuracy"
           value={`${(identityScore * 100).toFixed(0)}%`}
           subtext="Coverage of people + companies"
@@ -252,11 +264,6 @@ export function CostSummaryPanel() {
           label="Email accuracy"
           value={`${(emailScore * 100).toFixed(0)}%`}
           subtext="Relative accuracy after verification. Premium stacks typically peak at 90-95%."
-        />
-        <MetricCard
-          label="Phone / SMS accuracy"
-          value={`${(phoneScore * 100).toFixed(0)}%`}
-          subtext="Relative modeled correctness of phone + SMS eligibility"
         />
       </div>
     </div>
