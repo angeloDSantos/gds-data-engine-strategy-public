@@ -112,6 +112,11 @@ function StackDiagramInner() {
       setSelectedNode(node.id);
       setActiveStageId(node.id);
       
+      // If clicking a main layer in overview, enter detail view
+      if (!isDetailView && node.id.startsWith("layer_")) {
+        setSelectedLayer(node.id);
+      }
+      
       const nodeObj = nodes.find(n => n.id === node.id);
       if (nodeObj && !isDetailView) {
         reactFlow.fitView({
@@ -174,7 +179,6 @@ function StackDiagramInner() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeClick={onNodeClick}
-        onNodeDoubleClick={onNodeDoubleClick}
         nodeTypes={nodeTypes}
         minZoom={0.1}
         maxZoom={2.5}
@@ -271,7 +275,7 @@ function StackDiagramInner() {
                 Full Stack
               </button>
               <ChevronRight className="size-4 text-quaternary" />
-              <span className="font-bold text-brand">{activeLayerLabel}</span>
+              <span className="font-bold text-brand">{activeLayerLabel || "Layer Details"}</span>
             </div>
 
             {activeLayerPurpose && (

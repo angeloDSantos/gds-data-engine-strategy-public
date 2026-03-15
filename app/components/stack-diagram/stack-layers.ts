@@ -425,6 +425,7 @@ export function buildLayerDetailDiagram(layerId: string): { nodes: Node[]; edges
           label: sub.label,
           purpose: sub.purpose,
           providers: sub.providers || [],
+          isOverview: false,
         },
       });
     });
@@ -473,6 +474,7 @@ export function buildLayerDetailDiagram(layerId: string): { nodes: Node[]; edges
       label: "Input Data",
       purpose: "Raw signals for " + layer.label,
       providers: [],
+      isOverview: false,
     },
   });
 
@@ -490,6 +492,7 @@ export function buildLayerDetailDiagram(layerId: string): { nodes: Node[]; edges
         label: subLabel,
         purpose: "Phase " + (index + 1),
         providers: layer.providers,
+        isOverview: false,
       },
     });
 
@@ -512,6 +515,7 @@ export function buildLayerDetailDiagram(layerId: string): { nodes: Node[]; edges
       label: "Output Tier",
       purpose: "Resolved state for downstream sync",
       providers: [],
+      isOverview: false,
     },
   });
 
