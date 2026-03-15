@@ -101,7 +101,7 @@ export const stackLayers: StackLayerDef[] = [
     id: "layer_4",
     label: "Email Pattern Engine",
     purpose: "Infer and store company email naming conventions",
-    narrative: "Learns and stores company-specific email naming conventions (e.g., first.last) from historical data to automate resolution without external API costs.",
+    narrative: "Learns and stores company-specific email conventions from historical data. Applies seniority-based logic (e.g., first@ for C-Suite vs. firstlast@ for Directors) to automate resolution without external API costs.",
     providers: ["internal"],
     subLayers: ["pattern suggestion", "confidence scoring", "exception detection"],
     outputSpec: "{Email Pattern (e.g. f.last@domain), Confidence Score}",

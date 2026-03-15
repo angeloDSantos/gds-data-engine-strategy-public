@@ -143,6 +143,7 @@ export function DocsPage() {
                   <li><strong>Pattern History:</strong> If we have successfully delivered to <code>first.last@domain.com</code> previously, we promote that pattern to "Verified Truth" for all targets at that company.</li>
                   <li><strong>Response Loop:</strong> Data from responded emails from our DSEs (Designated Sales Executives) is immediately fed back into the pattern DB. A single reply validates the pattern for thousands of future records.</li>
                   <li><strong>Confidence Tiers:</strong> Catch-alls are never sent blindly. They are segmented into high-confidence (validated via pattern) and risky pools.</li>
+                  <li><strong>Seniority Mapping:</strong> Our engine recognizes that patterns shift by role. For example, C-suite targets are 70% more likely to follow the <code>first@domain.com</code> convention, while Directors/Heads of typically use <code>firstlast@domain.com</code>.</li>
                 </ol>
               </div>
             </div>
