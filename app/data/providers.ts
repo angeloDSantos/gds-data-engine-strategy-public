@@ -126,12 +126,14 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "https://emailsearch.io",
         category: "enrichment",
         tier: "cheap",
-        pricingModel: { type: "planCredits", planCost: 348, includedUnits: 12000 },
-        truthLevel: "derived_efficiency_estimate",
-        strengths: ["Budget friendly", "Search by social"],
+        pricingModel: { type: "usage", unitCost: 0.0001 }, // Unlimited $249/mo modeled as near-zero marginal
+        truthLevel: "official_public",
+        packageNote: "$249/mo Unlimited Plan",
+        accuracyPercent: 78,
+        strengths: ["Unlimited lookups", "Budget leader", "Search by social"],
         weaknesses: ["Lower accuracy than Prospeo"],
         rolesByLayer: {
-            layer_5: { role: "Cheap Resolution", costEffect: "low", confidenceEffect: "medium", description: "First-pass resolution for low-priority leads." },
+            layer_5: { role: "High-Volume Pass", costEffect: "low", confidenceEffect: "medium", description: "Bypasses credit-burn for high-volume sweeps." },
         },
     },
     millionverifier: {
@@ -291,8 +293,8 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         strengths: ["Custom rules", "Proprietary pattern DB", "No external cost"],
         weaknesses: ["Maintenance required"],
         rolesByLayer: {
-            layer_4: { role: "Pattern Engine", costEffect: "low", confidenceEffect: "high", description: "Learns company naming conventions from historical data." },
-            layer_7: { role: "Catch-all Policy", costEffect: "low", confidenceEffect: "medium", description: "Custom routing for blanket-acceptance domains." },
+            layer_4: { role: "Pattern Engine", costEffect: "low", confidenceEffect: "high", description: "Learns company naming conventions to bypass enrichment spend." },
+            layer_7: { role: "Catch-all Policy", costEffect: "low", confidenceEffect: "medium", description: "Applies zero-cost resolution to verify company intelligence signals." },
         },
     },
     crunchbase: {

@@ -30,7 +30,7 @@ export function PricingPage() {
               <div>
                 <h3 className="text-lg font-bold text-brand">The Compounding Memory Effect</h3>
                 <p className="mt-1 text-sm text-secondary leading-relaxed">
-                  As our internal database grows, the need to pay for external lookups vanishes. For high-volume campaigns (2.5M+ targets), up to **33%-40%** of contacts are typically already verified in our Master DB, dropping the marginal cost of subsequent campaigns toward zero.
+                  As our internal database grows, the need to pay for external lookups vanishes. For high-volume campaigns (2.5M+ targets), up to **30-50%** of contacts are typically already verified in our Master DB. By leveraging Emailsearch.io's **unlimited** plan ($249/mo) and proprietary pattern recognition, we drive the blended marginal cost per lead down by an additional **10-15%** for all campaigns.
                 </p>
               </div>
             </div>
@@ -202,8 +202,56 @@ export function PricingPage() {
 
             <div className="rounded-xl bg-brand-secondary/20 p-4 border border-brand/10">
               <p className="text-xs text-brand font-medium leading-relaxed">
-                <strong>Economic Impact:</strong> By routing 85% of traffic through the first 4 steps, we preserve premium credits for high-value targets, reducing the blended cost per lead by up to <strong>70%</strong> compared to single-provider stacks.
+                <strong>Economic Impact:</strong> By routing 85% of traffic through the first 4 steps and utilizing unlimited lookup packages, we preserve premium credits for high-value targets, reducing the blended cost per lead by up to <strong>75-80%</strong> compared to single-provider stacks.
               </p>
+            </div>
+          </section>
+
+          {/* Catch-all Leverage Strategy */}
+          <section className="rounded-2xl border border-secondary bg-primary p-8 space-y-6">
+            <div className="flex items-center gap-3">
+              <Activity className="size-6 text-brand" />
+              <h2 className="text-xl font-bold text-primary">Catch-all Efficiency Engine</h2>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                <p className="text-sm text-secondary leading-relaxed">
+                  Most providers charge for "enrichment" on catch-all domains, even though deliverability is uncertain. Our stack treats Catch-alls as a separate operational pool, bypassing traditional credit burn.
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    "Zero Enrichment Cost: 100% pattern-based resolution for catch-all domains.",
+                    "High-Volume Verification: Verified via MillionVerify's 1M credit pool.",
+                    "Proprietary Patterns: C-Suite vs Director logic applied via Internal Pattern DB.",
+                    "15% Blended Savings: Enrichment spend removed for ~40% of the target market."
+                  ].map((benefit, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-secondary">
+                      <Zap className="size-3.5 text-brand shrink-0 mt-0.5" />
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-xl border border-secondary bg-secondary_subtle p-6 flex flex-col justify-center">
+                <div className="text-[10px] font-bold text-tertiary uppercase tracking-wider mb-2">Strategy Comparison</div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-secondary">Standard Stack (Enrichment Per Lead)</span>
+                    <span className="font-bold text-error-600">$0.12 - $0.80</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+                    <div className="h-full bg-error-500 w-full" />
+                  </div>
+                  <div className="flex justify-between items-center text-xs mt-2">
+                    <span className="text-brand font-bold">GDS Catch-all Flow (Pattern + Verification)</span>
+                    <span className="font-bold text-success-600">$0.0005</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+                    <div className="h-full bg-success-500 w-[5%]" />
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </div>
