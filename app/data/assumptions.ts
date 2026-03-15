@@ -46,10 +46,10 @@ export const defaultAssumptions: AssumptionSet = {
   pdl_identity_lift_on_unresolved: 0.12,
   scraped_identity_lift: 0.08,
   domain_resolution_rate: 0.95,
-  known_pattern_coverage: 0.45,
-  pattern_generation_success_rate: 0.88,
-  smtp_verified_rate_on_generated: 0.65,
-  catch_all_rate_on_generated: 0.15,
+  known_pattern_coverage: 0.70, // Increased to encompass more of the corporate market
+  pattern_generation_success_rate: 0.92,
+  smtp_verified_rate_on_generated: 0.55, // 55% Valid + 40% Catch-all = 95% Resolved
+  catch_all_rate_on_generated: 0.40, // Reflected 40% market share for catch-all domains 
   fallback_enrichment_rate: 0.42,
   fallback_email_success_rate: 0.58,
   verification_valid_rate_on_fallback: 0.86,
@@ -57,7 +57,7 @@ export const defaultAssumptions: AssumptionSet = {
   mobile_classification_rate: 0.72,
   active_reachable_rate: 0.85,
   sms_eligible_rate_after_policy: 0.80,
-  catch_all_release_rate_based_on_confidence: 0.65,
+  catch_all_release_rate_based_on_confidence: 0.90, // High confidence via Pattern DB + MillionVerify
   // Waterfall Routing Defaults
   known_good_email_reuse_rate: 0.22, // Increased reuse for "already in DB" logic
   cheap_pass_success_rate: 0.48,
