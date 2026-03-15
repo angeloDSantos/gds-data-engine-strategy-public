@@ -38,6 +38,7 @@ export interface StackLayerDef {
   crmInteraction?: "input" | "output" | "both" | "none";
   inputChecks?: string[];
   outputWrites?: string[];
+  phaseNumber?: number;
 }
 
 export const stackLayers: StackLayerDef[] = [
@@ -52,6 +53,7 @@ export const stackLayers: StackLayerDef[] = [
     crmInteraction: "input",
     inputChecks: ["known account", "existing alias", "mapped domain"],
     outputWrites: ["unified company profile", "dedupe event"],
+    phaseNumber: 1,
     subLayersFlow: [
       { id: "l1_i1", label: "External Signals", kind: "input", purpose: "Apollo, PDL raw org records" },
       { id: "l1_p1", label: "Check Known Company?", kind: "process", purpose: "Consult internal master graph before spend", providers: ["internal"] },
@@ -69,6 +71,7 @@ export const stackLayers: StackLayerDef[] = [
     outputSpec: "{Company Name, First Name, Last Name, Verified Title}",
     crmInteraction: "input",
     inputChecks: ["existing contact", "title history", "confirmed identiy"],
+    phaseNumber: 2,
     subLayersFlow: [
       { id: "l2_p1", label: "Internal Identity Match", kind: "process", purpose: "Reuse existing truth before resolution", providers: ["internal"] },
       { id: "l2_p2", label: "Social Identity Resolve", kind: "process", purpose: "Merge resume & social signals", providers: ["apollo", "pdl", "rocketreach"] },
@@ -86,6 +89,7 @@ export const stackLayers: StackLayerDef[] = [
     crmInteraction: "both",
     inputChecks: ["known domain", "mx history", "base catch-all status"],
     outputWrites: ["root domain", "mx provider", "catch-all classification"],
+    phaseNumber: 3,
     subLayersFlow: [
       { id: "l3_i1", label: "Identity Domains", kind: "input", purpose: "Domains from resolved identities" },
       { id: "l3_p1", label: "Lookup Known Domain?", kind: "process", purpose: "Reuse cached intel", providers: ["internal"] },
@@ -104,6 +108,7 @@ export const stackLayers: StackLayerDef[] = [
     crmInteraction: "both",
     inputChecks: ["existing pattern", "verified truth samples"],
     outputWrites: ["inferred pattern", "pattern confidence"],
+    phaseNumber: 4,
     subLayersFlow: [
       { id: "l4_p1", label: "Pattern Inference", kind: "process", purpose: "Derive naming conventions (Cost = $0)", providers: ["internal"] },
       { id: "l4_o1", label: "Internal Pattern DB", kind: "output", purpose: "Reusable resolution assets" },
@@ -120,6 +125,7 @@ export const stackLayers: StackLayerDef[] = [
     crmInteraction: "both",
     inputChecks: ["known-good emails", "prior bounce attempts"],
     outputWrites: ["candidate emails", "spend event"],
+    phaseNumber: 4,
     subLayersFlow: [
       { id: "l5_p1", label: "Check Known-Good?", kind: "process", purpose: "Reuse verified truth first", providers: ["internal"] },
       { id: "l5_p2", label: "Cheap Provider Pass", kind: "process", purpose: "First pass via low-cost vendors", providers: ["emailsearch_io", "apollo", "prospeo"] },
@@ -135,6 +141,7 @@ export const stackLayers: StackLayerDef[] = [
     providers: ["millionverifier", "neverbounce", "zerobounce"],
     subLayers: ["SMTP handshake", "catch-all classification", "confidence scoring"],
     outputSpec: "{Email, SMTP Status (Deliverable/Catch-all/Invalid)}",
+    phaseNumber: 5,
     subLayersFlow: [
       { id: "l6_i1", label: "Candidate Emails", kind: "input", purpose: "Unverified resolution results" },
       { id: "l6_p1", label: "SMTP Handshake", kind: "process", purpose: "Direct server verification", providers: ["neverbounce", "millionverifier"] },
@@ -154,6 +161,7 @@ export const stackLayers: StackLayerDef[] = [
     crmInteraction: "both",
     inputChecks: ["prior catch-all history", "reply signal ladder"],
     outputWrites: ["catch-all confidence tier", "distribution pool"],
+    phaseNumber: 6,
     subLayersFlow: [
       { id: "l7_p1", label: "Confidence Tiers", kind: "process", purpose: "Segment by engagement history", providers: ["internal"] },
       { id: "l7_p2", label: "Policy Guard", kind: "process", purpose: "Apply volume/cadence filters", providers: ["internal"] },
@@ -168,6 +176,7 @@ export const stackLayers: StackLayerDef[] = [
     providers: ["rocketreach", "apollo", "cognism", "twilio_lookup", "telesign"],
     subLayers: ["E.164 normalization", "line type", "carrier lookup", "SMS eligibility"],
     outputSpec: "{Verified Mobile Number, Line Type, Carrier, SMS Eligible}",
+    phaseNumber: 6,
     subLayersFlow: [
       { id: "l8_i1", label: "Target Person", kind: "input", purpose: "Resolved identity from Layer 2" },
       { id: "l8_p1", label: "Normalization", kind: "process", purpose: "Standardize E.164 formats", providers: ["internal"] },
@@ -187,6 +196,7 @@ export const stackLayers: StackLayerDef[] = [
     outputSpec: "{Compliant Lead Set, Suppression Reason Code}",
     crmInteraction: "input",
     inputChecks: ["DNC", "active opps", "opt-out state"],
+    phaseNumber: 7,
     subLayersFlow: [
       { id: "l9_p1", label: "Compliance Pass", kind: "process", purpose: "Filter against DNC & Opps", providers: ["internal"] },
       { id: "l9_o1", label: "Compliant Leads", kind: "output", purpose: "Safe-to-outreach records" },
@@ -201,7 +211,7 @@ export const stackLayers: StackLayerDef[] = [
     subLayers: ["event bus", "confidence updates", "pattern DB updates"],
     outputSpec: "{Enriched Profile, Sync Status, Feedback Loop Event}",
     crmInteraction: "output",
-    outputWrites: ["delivered", "bounced", "replied", "opt-out", "pattern boost"],
+    phaseNumber: 8,
     subLayersFlow: [
       { id: "l10_i1", label: "Campaign Events", kind: "input", purpose: "Replies, Bounces, Opens" },
       { id: "l10_p1", label: "Reply Boost Loop", kind: "process", purpose: "Promote replies to verified truth", providers: ["internal"] },
@@ -216,6 +226,7 @@ export const stackLayers: StackLayerDef[] = [
     providers: ["internal"],
     outputSpec: "{Verified Email List, Catch-all List, Mobile SMS List}",
     crmInteraction: "output",
+    phaseNumber: 9,
     subLayers: [
       "Verified Email Pool",
       "Catch-all High-confidence Pool",
@@ -272,6 +283,7 @@ export function buildOverviewDiagram(): { nodes: Node[]; edges: Edge[] } {
         providers: layer.providers,
         outputSpec: layer.outputSpec,
         isOverview: true,
+        phaseNumber: layer.phaseNumber,
       },
     });
 

@@ -82,10 +82,10 @@ function StackDiagramInner() {
       if (isDetailView) {
         reactFlow.fitView({ padding: 0.15, duration: 400 });
       } else {
-        // Find active stage node and focus it initially
-        const activeNode = initialNodes.find(n => n.id === activeStageId);
-        if (activeNode) {
-          reactFlow.fitView({ nodes: [activeNode], padding: 2.0, duration: 400 });
+        // Find layer_1 and focus it initially with a tight, premium zoom
+        const startNode = initialNodes.find(n => n.id === "layer_1");
+        if (startNode) {
+          reactFlow.fitView({ nodes: [startNode], padding: 0.8, duration: 400 });
         }
       }
     });

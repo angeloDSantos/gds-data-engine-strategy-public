@@ -22,6 +22,13 @@ export const LayerNode = memo(function LayerNode({ data, selected }: any) {
       )}
       style={data.style}
     >
+      {/* Step Number Badge */}
+      {data.phaseNumber && (
+        <div className="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg border-2 border-brand bg-primary font-bold text-brand shadow-lg transition-transform group-hover:scale-110">
+          {data.phaseNumber}
+        </div>
+      )}
+
       {/* Handles logic: Vertical for Overview, Horizontal for Drill-ins */}
       <Handle
         type="target"
