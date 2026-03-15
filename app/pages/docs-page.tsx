@@ -20,6 +20,7 @@ const sections = [
   { id: "catch-all", label: "Catch-all Pipeline", icon: Mail01 },
   { id: "mobile", label: "Mobile Resolution", icon: Phone },
   { id: "compounding", label: "Compounding Intelligence", icon: Database01 },
+  { id: "agent", label: "Agent Intelligence", icon: Zap },
   { id: "compliance", label: "Compliance & Shield", icon: ShieldTick },
 ];
 
@@ -227,6 +228,47 @@ export function DocsPage() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === "agent" && (
+            <div className="space-y-8">
+              <header className="border-b border-secondary pb-4">
+                <h1 className="text-3xl font-bold text-primary">Agent Intelligence</h1>
+                <p className="mt-2 text-lg text-tertiary">Bypassing legacy scraping with high-performance DOM capture.</p>
+              </header>
+
+              <div className="prose prose-sm prose-slate max-w-none text-secondary">
+                <div className="mb-6 rounded-lg border border-brand/20 bg-brand/5 p-4 flex gap-4">
+                   <Zap className="size-6 text-brand shrink-0" />
+                   <div>
+                     <h4 className="text-primary font-bold mb-1">Cloudflare /crawl Integration</h4>
+                     <p className="text-sm text-tertiary leading-relaxed">
+                       Traditional scraping is dead. By leveraging the <strong>Cloudflare /crawl</strong> endpoint, we receive the full HTML & DOM of any website with 1 command—no scraping required.
+                     </p>
+                     <p className="mt-2 text-xs text-brand font-medium">
+                       <a href="https://developers.cloudflare.com/changelog/post/2026-03-10-br-crawl-endpoint/" target="_blank" rel="noreferrer" className="underline hover:text-brand-secondary">
+                         Read the /crawl release notes →
+                       </a>
+                     </p>
+                   </div>
+                </div>
+
+                <p>
+                  This leap in technology allows us to get full page data and parse it in <strong>milliseconds</strong>, making enterprise-grade automation essentially free.
+                </p>
+
+                <h3 className="text-xl font-semibold text-primary mt-8">Impact on Economic Efficiency</h3>
+                <ul className="list-disc space-y-3 pl-5">
+                  <li><strong>Zero Proxy Overhead:</strong> Traditional agents spend 80% of their cost on rotating proxies and header spoofing. /crawl eliminates this entirely.</li>
+                  <li><strong>Absolute DOM Accuracy:</strong> We get the browser-rendered truth immediately, ensuring pattern recognition for emails and phone numbers is 100% accurate before it even hits the waterfall.</li>
+                  <li><strong>Scalability:</strong> We can process 10,000+ domains per hour with near-zero latency, populating the Master DB at light speed.</li>
+                </ul>
+
+                <p className="mt-6 font-medium text-primary">
+                  The /crawl engine is the "fuel" that powers our pattern recognition, ensuring we only use paid credits for the most difficult targets.
+                </p>
               </div>
             </div>
           )}

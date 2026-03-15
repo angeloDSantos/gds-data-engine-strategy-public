@@ -114,6 +114,15 @@ export function calculateOutputs(
   const active_mobiles = mobile_candidates * assumptions.active_reachable_rate;
   const sms_eligible_mobiles = active_mobiles * assumptions.sms_eligible_rate_after_policy;
 
+  // 3. Accuracy & Efficiency Metrics
+  const total_email_resolved = total_verified_emails + total_catch_all_emails;
+  const accuracy_pre_validation = total_email_resolved > 0 
+    ? (known_good_emails * 0.99 + pattern_candidates * 0.85 + cheap_pass_hits * 0.72 + premium_fallback_hits * 0.88) / 
+      (known_good_emails + pattern_candidates + cheap_pass_hits + premium_fallback_hits)
+    : 0;
+
+  const provider_calls_avoided = identities * (assumptions.internal_domain_reuse_rate + assumptions.internal_pattern_reuse_rate + assumptions.known_good_email_reuse_rate);
+
   const accuracy_phone_pre = total_email_resolved > 0 ? (identities > 0 ? (reused_phones * 0.95 + source_hits * 0.75) / (reused_phones + source_hits) : 0) : 0;
 
   return {

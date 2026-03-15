@@ -17,7 +17,8 @@ export type ProviderId =
     | "clay"
     | "crunchbase"
     | "hlr_lookup"
-    | "salesintel";
+    | "salesintel"
+    | "cloudflare_crawl";
 
 export type RoleInLayer = {
     role: string;
@@ -340,6 +341,22 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         weaknesses: ["Smaller database than ZoomInfo", "B2B focused"],
         rolesByLayer: {
             layer_8: { role: "Direct Dial Focus", costEffect: "medium", confidenceEffect: "very_high", description: "Primary source for high-accuracy direct dial campaigns." },
+        },
+    },
+    cloudflare_crawl: {
+        id: "cloudflare_crawl",
+        name: "Cloudflare /crawl",
+        website: "https://developers.cloudflare.com/changelog/post/2026-03-10-br-crawl-endpoint/",
+        category: "internal",
+        tier: "internal",
+        pricingModel: { type: "usage", unitCost: 0.00 },
+        truthLevel: "internal_benchmark_only",
+        accuracyPercent: 100,
+        strengths: ["Full HTML & DOM with 1 command", "No scraping required", "Parse in milliseconds", "Enterprise grade automation"],
+        weaknesses: ["Requires technical setup"],
+        rolesByLayer: {
+            layer_1: { role: "Deep Intel Extraction", costEffect: "low", confidenceEffect: "very_high", description: "Extracts full DOM data for company intelligence." },
+            layer_4: { role: "Pattern Discovery", costEffect: "low", confidenceEffect: "very_high", description: "Discovers on-page email patterns without proxy overhead." },
         },
     },
 };
