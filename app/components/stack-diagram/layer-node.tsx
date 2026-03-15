@@ -77,13 +77,20 @@ export const LayerNode = memo(function LayerNode({ data, selected }: any) {
         </div>
       )}
 
-      {data.providers?.length > 0 && (
+      {data.providers && data.providers.length > 0 && (
         <div className={cx(
           "flex flex-wrap gap-2",
           isOverview ? "mt-6" : "mt-3"
         )}>
-          <div className="w-full text-[10px] font-bold uppercase tracking-widest text-quaternary mb-1">
-            Technology Partners
+          <div className="w-full flex items-center justify-between mb-1">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-quaternary">
+              Technology Partners
+            </span>
+            {data.partnersNote && (
+              <span className="text-[10px] font-bold text-brand italic">
+                {data.partnersNote}
+              </span>
+            )}
           </div>
           {data.providers.slice(0, 6).map((p: any) => (
             <button

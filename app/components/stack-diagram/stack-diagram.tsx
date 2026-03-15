@@ -35,8 +35,19 @@ function StackDiagramInner() {
   const reactFlow = useReactFlow();
 
   // Navigation Logic
-  const allLayerIds = useMemo(() => stackLayers.map(l => l.id), []);
+  // Navigation Logic
+  const allLayers = useMemo(() => stackLayers, []);
+  const allLayerIds = useMemo(() => allLayers.map(l => l.id), [allLayers]);
   const currentIndex = allLayerIds.indexOf(activeStageId);
+  const activeLayer = useMemo(() => {
+    const id = isDetailView ? selectedLayerId : activeStageId;
+    if (!id) return null;
+    return allLayers.find((l) => l.id === id) || null;
+  }, [selectedLayerId, isDetailView, activeStageId, allLayers]);
+
+  // Derived phase info for display
+  const maxPhases = useMemo(() => Math.max(...allLayers.map(l => l.phaseNumber || 0)), [allLayers]);
+  const currentPhase = activeLayer?.phaseNumber || 0;
 
   const goToStage = useCallback((id: string) => {
     setActiveStageId(id);
@@ -63,7 +74,12 @@ function StackDiagramInner() {
   }, [nodes, reactFlow, activeStageId]);
 
   const nextStage = () => {
-    if (currentIndex < allLayerIds.length - 1) {
+    // If we have distinct paths, clicking "Next Stage" should follow the first logical path
+    // if not already handled by path buttons
+    if (nextStages.length === 1) {
+      goToStage(nextStages[0]);
+    } else if (currentIndex < allLayerIds.length - 1) {
+      // Fallback to array order if no explicit edge found
       goToStage(allLayerIds[currentIndex + 1]);
     }
   };
@@ -89,7 +105,7 @@ function StackDiagramInner() {
         }
       }
     });
-  }, [initialNodes, initialEdges, reactFlow, setEdges, setNodes, isDetailView, activeStageId]);
+  }, [initialNodes, initialEdges, reactFlow, setEdges, setNodes, isDetailView]);
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: { id: string }) => {
@@ -121,12 +137,6 @@ function StackDiagramInner() {
       }
     }));
   }, [nodes, setSelectedProvider]);
-
-  const activeLayer = useMemo(() => {
-    const id = isDetailView ? selectedLayerId : activeStageId;
-    if (!id) return null;
-    return stackLayers.find((l) => l.id === id) || null;
-  }, [selectedLayerId, isDetailView, activeStageId]);
 
   const nextStages = useMemo(() => {
     // Find targets connected from the active stage
@@ -190,7 +200,7 @@ function StackDiagramInner() {
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
                   <span className="text-[9px] font-bold uppercase tracking-widest text-brand">
-                    Phase {currentIndex + 1} of {allLayerIds.length}
+                    Phase {currentPhase} of {maxPhases}
                   </span>
                   <h2 className="text-lg font-bold text-primary leading-tight">{activeLayerLabel}</h2>
                 </div>

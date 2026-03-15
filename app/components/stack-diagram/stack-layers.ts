@@ -39,6 +39,7 @@ export interface StackLayerDef {
   inputChecks?: string[];
   outputWrites?: string[];
   phaseNumber?: number;
+  partnersNote?: string;
 }
 
 export const stackLayers: StackLayerDef[] = [
@@ -47,7 +48,7 @@ export const stackLayers: StackLayerDef[] = [
     label: "Company Intelligence",
     purpose: "Identify target companies, create master company graph",
     narrative: "Checks master database for existing matching companies before ingesting market signals. Excludes existing records and adds new, validated company profiles to the deduplicated master graph.",
-    providers: ["apollo", "pdl", "emailsearch_io", "internal"],
+    providers: ["emailsearch_io", "crunchbase", "linkedin", "internal"],
     subLayers: ["company record ingestion", "dedupe", "domain resolution seed"],
     outputSpec: "{Company Name - HQ Location - Operating Locations}",
     crmInteraction: "input",
@@ -66,7 +67,7 @@ export const stackLayers: StackLayerDef[] = [
     label: "Identity Resolution",
     purpose: "Determine target executives and current employment",
     narrative: "Pinpoints target executives by merging resume history and social signals to confirm current employment status and decision-making authority.",
-    providers: ["apollo", "pdl", "rocketreach"],
+    providers: ["emailsearch_io", "internal"],
     subLayers: ["merge by name/company/title", "employment confidence", "title taxonomy"],
     outputSpec: "{Company Name, First Name, Last Name, Verified Title}",
     crmInteraction: "input",
@@ -139,6 +140,7 @@ export const stackLayers: StackLayerDef[] = [
     purpose: "Verify deliverability, classify catch-all vs valid",
     narrative: "Performs multi-signal SMTP handshakes to verify email deliverability and classifies catch-all domains to protect sender reputation.",
     providers: ["millionverifier", "neverbounce", "zerobounce"],
+    partnersNote: "MillionVerify: 1M infinite credits for $499",
     subLayers: ["SMTP handshake", "catch-all classification", "confidence scoring"],
     outputSpec: "{Email, SMTP Status (Deliverable/Catch-all/Invalid)}",
     phaseNumber: 5,
@@ -173,7 +175,7 @@ export const stackLayers: StackLayerDef[] = [
     label: "Phone / Mobile Resolution",
     purpose: "Build SMS-eligible mobile pool",
     narrative: "Resolves verified mobile numbers for high-intent playbooks, including line type (mobile vs. landline) and carrier verification.",
-    providers: ["rocketreach", "apollo", "cognism", "twilio_lookup", "telesign"],
+    providers: ["rocketreach", "hlr_lookup", "twilio_lookup"],
     subLayers: ["E.164 normalization", "line type", "carrier lookup", "SMS eligibility"],
     outputSpec: "{Verified Mobile Number, Line Type, Carrier, SMS Eligible}",
     phaseNumber: 6,
@@ -284,6 +286,7 @@ export function buildOverviewDiagram(): { nodes: Node[]; edges: Edge[] } {
         outputSpec: layer.outputSpec,
         isOverview: true,
         phaseNumber: layer.phaseNumber,
+        partnersNote: layer.partnersNote,
       },
     });
 
