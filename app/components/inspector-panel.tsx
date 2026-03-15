@@ -3,7 +3,7 @@
 import { X, ChevronRight, HelpCircle, Coins01, Activity, Zap } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { useDiagramStore } from "../store/diagram-store";
-import { providerConfigs } from "../data/providers";
+import { providerConfigs, ProviderId } from "../data/providers";
 import { stackLayers } from "./stack-diagram/stack-layers";
 import { CostSummaryPanel } from "./cost-summary-panel";
 import { cx } from "@/utils/cx";
@@ -183,13 +183,30 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                             <div className="flex justify-between text-[11px]">
                                 <span className="text-tertiary">Layer Cost Contribution</span>
                                 <span className="font-bold text-primary">
-                                    {((layer?.providers.length || 0) * 0.08) > 0 ? `$${((layer?.providers.length || 0) * 0.08).toFixed(2)} / contact` : "Near-zero marginal"}
+                                    {(() => {
+                                        const layerProviders = layer?.providers.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
+                                        const sum = layerProviders.reduce((acc, p) => {
+                                            const pm = p.pricingModel;
+                                            if (pm.type === 'usage') return acc + pm.unitCost;
+                                            if (pm.type === 'quote') return acc + (pm.benchmarkUnitCost || 0);
+                                            if (pm.type === 'planCredits') return acc + (pm.planCost / pm.includedUnits);
+                                            if (pm.type === 'seatContract' && pm.includedCredits) return acc + (pm.annualContract / pm.includedCredits);
+                                            return acc;
+                                        }, 0);
+                                        return sum > 0 ? `$${sum.toFixed(4)} / contact` : "Near-zero marginal";
+                                    })()}
                                 </span>
                             </div>
                             <div className="flex justify-between text-[11px]">
-                                <span className="text-tertiary">Modeled Accuracy Lift</span>
+                                <span className="text-tertiary">Combined Accuracy</span>
                                 <span className="font-bold text-success-600">
-                                    +{((layer?.providers.length || 0) * 12.5).toFixed(1)}%
+                                    {(() => {
+                                        const layerProviders = layer?.providers.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
+                                        const withAccuracy = layerProviders.filter(p => p.accuracyPercent);
+                                        if (withAccuracy.length === 0) return "—";
+                                        const avg = withAccuracy.reduce((acc, p) => acc + (p.accuracyPercent || 0), 0) / withAccuracy.length;
+                                        return `${avg.toFixed(1)}%`;
+                                    })()}
                                 </span>
                             </div>
                         </div>

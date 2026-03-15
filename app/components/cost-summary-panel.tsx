@@ -82,7 +82,7 @@ export function CostSummaryPanel() {
 
     // Corrected Phone Logic: Source (RocketReach $0.05) vs Validation (HLR <$0.01)
     const phoneSourceCost = providerConfigs.rocketreach.pricingModel.type === 'quote' ? (providerConfigs.rocketreach.pricingModel.benchmarkUnitCost || 0.05) : 0.05;
-    const phoneValidationCost = providerConfigs.hlr_lookup.pricingModel.type === 'usage' ? providerConfigs.hlr_lookup.pricingModel.unitCost : 0.012;
+    const phoneValidationCost = providerConfigs.hlr_lookup.pricingModel.type === 'usage' ? providerConfigs.hlr_lookup.pricingModel.unitCost : 0.0045;
     
     // We only pay source cost for NEW hits (not database hits)
     const phoneSourceTotal = (outputs as any).phone_source_hits * phoneSourceCost;

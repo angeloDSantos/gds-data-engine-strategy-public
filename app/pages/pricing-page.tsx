@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { providerConfigs, ProviderId } from "../data/providers";
-import { Coins02, Zap, Database01, HelpCircle, ShieldTick } from "@untitledui/icons";
+import { Coins02, Zap, Database01, HelpCircle, ShieldTick, Activity } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 
 export function PricingPage() {
@@ -30,7 +30,7 @@ export function PricingPage() {
               <div>
                 <h3 className="text-lg font-bold text-brand">The Compounding Memory Effect</h3>
                 <p className="mt-1 text-sm text-secondary leading-relaxed">
-                  As our internal database grows, the need to pay for external lookups vanishes. For high-volume campaigns (2.5M+ targets), up to **30-50%** of contacts are typically already verified in our Master DB. By leveraging Emailsearch.io's **unlimited** plan ($249/mo) and proprietary pattern recognition, we drive the blended marginal cost per lead down by an additional **10-15%** for all campaigns.
+                  As our internal database grows, the need to pay for external lookups vanishes. For high-volume campaigns (2.5M+ targets), up to **30-50%** of contacts are typically already verified in our Master DB. By combining this with our **Waterfall Strategy**—using unlimited providers like Emailsearch.io ($249/mo) and proprietary pattern recognition first—we drive the blended marginal cost per lead down by an additional **10-15%**.
                 </p>
               </div>
             </div>

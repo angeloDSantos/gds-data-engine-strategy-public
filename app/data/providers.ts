@@ -318,7 +318,7 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         website: "",
         category: "phone",
         tier: "phone",
-        pricingModel: { type: "usage", unitCost: 0.012 },
+        pricingModel: { type: "usage", unitCost: 0.0045 }, // $0.015 - 70% discount as per user
         truthLevel: "internal_benchmark_only",
         strengths: ["Real-time connectivity check", "Network status"],
         weaknesses: ["Latency"],
