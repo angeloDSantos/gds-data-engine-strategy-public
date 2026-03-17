@@ -146,7 +146,6 @@ export function StackExplorerPage() {
           )}
         </aside>
 
-        {/* Sidebar Toggle Button */}
         {!isMobile && (
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -163,7 +162,7 @@ export function StackExplorerPage() {
             )}
           </button>
         )}
-        
+
         {isMobile && !isSidebarOpen && (
           <button
             onClick={() => { setIsSidebarOpen(true); setIsInspectorOpen(false); }}
@@ -214,13 +213,12 @@ export function StackExplorerPage() {
           )}
         </aside>
 
-        {/* Right Sidebar Toggle Button */}
         {!isMobile && (
           <button
             onClick={() => setIsInspectorOpen(!isInspectorOpen)}
             className={cx(
               "absolute z-[100] top-4 flex h-8 w-8 items-center justify-center rounded-full border border-secondary bg-primary shadow-sm hover:bg-primary_hover transition-all duration-300",
-              isInspectorOpen ? "right-[288px]" : "right-4"
+              isInspectorOpen ? "right-[308px]" : "right-4"
             )}
             aria-label={isInspectorOpen ? "Collapse inspector" : "Expand inspector"}
           >

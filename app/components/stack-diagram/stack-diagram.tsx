@@ -5,10 +5,8 @@ import {
   Controls,
   useNodesState,
   useEdgesState,
-  useReactFlow,
   Panel,
   ReactFlowProvider,
-  useStoreApi,
   type NodeTypes,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
@@ -18,7 +16,6 @@ import { ErrorBoundary } from "../error-boundary";
 import { LayerNode } from "./layer-node";
 import { buildLayerDetailDiagram, buildOverviewDiagram, stackLayers } from "./stack-layers";
 import { ChevronLeft, ChevronRight, MarkerPin01, Play } from "@untitledui/icons";
-import { useStoreApi } from "@xyflow/react";
 
 const nodeTypes: NodeTypes = { layerNode: LayerNode };
 
@@ -318,18 +315,20 @@ function StackDiagramInner() {
             position="top-left"
             className="m-4 flex flex-col gap-1 rounded-xl border border-secondary bg-primary/95 p-4 shadow-xl backdrop-blur"
           >
-            <div className="flex items-center gap-2 text-sm">
-              <button
-                type="button"
-                onClick={handleBackToOverview}
-                className="flex items-center gap-1.5 font-semibold text-tertiary hover:text-primary transition-colors group"
-              >
-                <ChevronLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-                Full Stack
-              </button>
-              <ChevronRight className="size-4 text-quaternary" />
-              <span className="font-bold text-brand">{activeLayerLabel || "Layer Details"}</span>
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-quaternary">
+              <span className="text-tertiary">Full Stack</span>
+              <ChevronRight className="size-3" />
+              <span className="text-brand">{activeLayerLabel || "Layer Details"}</span>
             </div>
+
+            <button
+              type="button"
+              onClick={handleBackToOverview}
+              className="mt-1 flex items-center gap-1.5 text-xs font-bold text-primary hover:text-brand transition-colors group"
+            >
+              <ChevronLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
+              Back
+            </button>
 
             {activeLayerPurpose && (
               <p className="mt-1 max-w-[300px] text-xs text-tertiary font-medium italic">
