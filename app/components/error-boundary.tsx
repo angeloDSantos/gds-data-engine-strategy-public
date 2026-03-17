@@ -6,6 +6,7 @@ import { Button } from "@/components/base/buttons/button";
 
 interface Props {
   children?: ReactNode;
+  fallback?: ReactNode;
 }
 
 interface State {
@@ -35,6 +36,9 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
       return (
         <div style={{
           height: '100vh',

@@ -23,6 +23,7 @@ const nodeTypes: NodeTypes = { layerNode: LayerNode };
 function StackDiagramInner() {
   const { selectedLayerId, setSelectedLayer, setSelectedNode } = useDiagramStore();
   const [activeStageId, setActiveStageId] = useState<string>("layer_1");
+  const [diagramError, setDiagramError] = useState<Error | null>(null);
 
   const isDetailView = !!selectedLayerId;
 
@@ -95,25 +96,34 @@ function StackDiagramInner() {
   const isMobile = useMemo(() => typeof window !== 'undefined' ? window.innerWidth < 1024 : false, []);
 
   useEffect(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
+    try {
+      setNodes(initialNodes);
+      setEdges(initialEdges);
 
-    requestAnimationFrame(() => {
-      if (isDetailView) {
-        reactFlow.fitView({ padding: isMobile ? 0.05 : 0.15, duration: 400 });
-      } else {
-        // Find layer_1 and focus it initially with a tight, premium zoom
-        const startNode = initialNodes.find(n => n.id === "layer_1");
-        if (startNode) {
-          reactFlow.fitView({ 
-            nodes: [startNode], 
-            padding: isMobile ? 0.4 : 0.8, 
-            duration: 400 
-          });
+      const timer = setTimeout(() => {
+        try {
+          if (isDetailView) {
+            reactFlow.fitView({ padding: isMobile ? 0.05 : 0.15, duration: 400 });
+          } else {
+            const startNode = initialNodes.find(n => n.id === "layer_1");
+            if (startNode) {
+              reactFlow.fitView({
+                nodes: [startNode],
+                padding: isMobile ? 0.4 : 0.8,
+                duration: 400,
+              });
+            }
+          }
+        } catch (e) {
+          setDiagramError(e as Error);
         }
-      }
-    });
-  }, [initialNodes, initialEdges, reactFlow, setEdges, setNodes, isDetailView, isMobile]);
+      }, 50);
+
+      return () => clearTimeout(timer);
+    } catch (e) {
+      setDiagramError(e as Error);
+    }
+  }, [initialNodes, initialEdges, isDetailView, isMobile, reactFlow, setNodes, setEdges]);
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: { id: string }) => {
@@ -186,6 +196,9 @@ function StackDiagramInner() {
         onNodeClick={onNodeClick}
         onNodeDoubleClick={onNodeDoubleClick}
         nodeTypes={nodeTypes}
+        onInit={(instance) => {
+          setTimeout(() => instance.fitView({ padding: 0.15, duration: 300 }), 50);
+        }}
         minZoom={0.1}
         maxZoom={2.5}
         nodesDraggable={false}
@@ -291,6 +304,21 @@ function StackDiagramInner() {
               </p>
             )}
           </Panel>
+        )}
+
+        {diagramError && (
+          <div className="absolute inset-0 z-[200] flex items-center justify-center bg-primary/20 backdrop-blur-sm">
+            <div className="p-4 rounded-xl border border-secondary bg-primary shadow-2xl text-center">
+              <p className="text-sm font-bold text-primary">Diagram Error</p>
+              <p className="text-xs text-secondary mt-1">Failed to render diagram view.</p>
+              <button 
+                onClick={() => { setDiagramError(null); window.location.reload(); }}
+                className="mt-4 px-4 py-2 bg-brand-solid text-white text-xs font-bold rounded-lg"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
         )}
       </ReactFlow>
     </div>

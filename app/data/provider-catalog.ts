@@ -184,4 +184,17 @@ export const providerCatalog: Provider[] = [
     strengths: ["premium phone option"],
     weaknesses: ["high cost"],
   },
+  {
+    provider_id: "zoominfo",
+    name: "ZoomInfo",
+    categories: ["company_intelligence", "contact_data", "phone", "premium"],
+    pricing: {
+      type: "quote",
+      public_available: false,
+      manual_enterprise_override: true,
+      unit_cost_per_identity: 0.3,
+    },
+    strengths: ["comprehensive B2B database", "high accuracy"],
+    weaknesses: ["extremely expensive"],
+  },
 ];

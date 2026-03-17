@@ -408,12 +408,24 @@ export function buildLayerDetailDiagram(layerId: string): { nodes: Node[]; edges
     // Keep track of node positions for edge routing
     const nodePosMap: Record<string, { x: number, y: number }> = {};
 
-    flow.forEach((sub, index) => {
-      // Simple layout: stack inputs, stack processes, etc.
-      const kindIndex = flow.filter((s, i) => s.kind === sub.kind && i < index).length;
+    // Group decisions with processes for layout purposes
+    const getCol = (kind: string) => {
+      if (kind === "input") return 0;
+      if (kind === "output") return horizontalGap * 3;
+      return horizontalGap * 1.5; // process + decision share middle space
+    };
 
-      const x = cols[sub.kind] || (index * horizontalGap);
-      const y = kindIndex * verticalGap;
+    const getRowIndex = (sub: SubLayerDef, index: number) => {
+      const isMiddle = sub.kind === "process" || sub.kind === "decision";
+      return flow.filter((s, i) => 
+        i < index && (s.kind === "process" || s.kind === "decision") === isMiddle
+      ).length;
+    };
+
+    flow.forEach((sub, index) => {
+      const rowIndex = getRowIndex(sub, index);
+      const x = getCol(sub.kind);
+      const y = rowIndex * verticalGap;
 
       nodePosMap[sub.id] = { x, y };
 

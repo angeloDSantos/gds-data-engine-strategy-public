@@ -81,8 +81,8 @@ export const useDiagramStore = create<DiagramState>()(
       setConfidenceMode: (mode) => {
         const providers: Record<ConfidenceMode, string[]> = {
           base: ["internal", "crunchbase", "pdl", "apollo", "prospeo", "emailsearch_io", "millionverifier", "rocketreach", "hlr_lookup", "salesintel", "cloudflare_crawl", "clay"],
-          aggressive: ["internal", "apollo", "emailsearch_io", "millionverifier", "hlr_lookup", "cloudflare_crawl", "clay"],
-          conservative: ["internal", "zoominfo", "cognism", "lusha", "pdl", "rocketreach", "neverbounce", "salesintel", "crunchbase", "cloudflare_crawl", "clay"]
+          conservative: ["internal", "apollo", "emailsearch_io", "millionverifier", "hlr_lookup", "cloudflare_crawl", "clay"],
+          aggressive: ["internal", "zoominfo", "cognism", "lusha", "pdl", "rocketreach", "neverbounce", "salesintel", "crunchbase", "cloudflare_crawl", "clay"]
         };
         
         set((s) => {
@@ -130,6 +130,11 @@ export const useDiagramStore = create<DiagramState>()(
     }),
     { 
       name: "gds-diagram-store", 
+      version: 2,
+      migrate: (persistedState: any, version: number) => {
+        if (version < 2) return {};
+        return persistedState;
+      },
       partialize: (s) => ({ 
         assumptions: s.assumptions, 
         presets: s.presets,
