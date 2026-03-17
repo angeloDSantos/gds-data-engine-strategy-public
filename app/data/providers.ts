@@ -18,7 +18,9 @@ export type ProviderId =
     | "crunchbase"
     | "hlr_lookup"
     | "salesintel"
-    | "cloudflare_crawl";
+    | "cloudflare_crawl"
+    | "clearbit"
+    | "datablist";
 
 export type RoleInLayer = {
     role: string;
@@ -357,6 +359,36 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         rolesByLayer: {
             layer_1: { role: "Deep Intel Extraction", costEffect: "low", confidenceEffect: "very_high", description: "Extracts full DOM data for company intelligence." },
             layer_4: { role: "Pattern Discovery", costEffect: "low", confidenceEffect: "very_high", description: "Discovers on-page email patterns without proxy overhead." },
+        },
+    },
+    clearbit: {
+        id: "clearbit",
+        name: "Clearbit",
+        website: "https://clearbit.com",
+        category: "enrichment",
+        tier: "mid",
+        pricingModel: { type: "usage", unitCost: 0.15 },
+        truthLevel: "manual_quote_required",
+        accuracyPercent: 88,
+        strengths: ["Premium company telemetry", "Real-time lookups", "Rich firmographics"],
+        weaknesses: ["High cost for high volume", "Strict API limits"],
+        rolesByLayer: {
+            layer_3: { role: "Domain Resolution", costEffect: "high", confidenceEffect: "very_high", description: "Resolves root domains and company meta-data." },
+        },
+    },
+    datablist: {
+        id: "datablist",
+        name: "Datablist",
+        website: "https://datablist.com",
+        category: "enrichment",
+        tier: "mid",
+        pricingModel: { type: "usage", unitCost: 0.05 },
+        truthLevel: "official_public",
+        accuracyPercent: 85,
+        strengths: ["Bulk domain processing", "Clean UI for data cleaning", "Cost-effective lookups"],
+        weaknesses: ["Smaller identity graph than PDL"],
+        rolesByLayer: {
+            layer_3: { role: "Bulk Domain Mapping", costEffect: "medium", confidenceEffect: "high", description: "Efficiently maps company names to root domains." },
         },
     },
 };

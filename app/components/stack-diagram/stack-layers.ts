@@ -84,7 +84,7 @@ export const stackLayers: StackLayerDef[] = [
     label: "Domain Intelligence",
     purpose: "Resolve company domains, MX lookup, catch-all status",
     narrative: "Analyzes root domains and MX records to identify mail server providers, detect catch-all status, and ensure infrastructure stability before outreach.",
-    providers: ["internal", "enrichment_providers"],
+    providers: ["internal", "clearbit", "datablist"],
     subLayers: ["root domain", "MX lookup", "catch-all flagging", "pattern history"],
     outputSpec: "{Root Domain, MX Provider, Catch-all Status}",
     crmInteraction: "both",

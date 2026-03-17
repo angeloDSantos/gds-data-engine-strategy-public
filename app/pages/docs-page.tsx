@@ -291,6 +291,46 @@ export function DocsPage() {
               </div>
             </div>
           )}
+
+          {activeSection === "compliance" && (
+            <div className="space-y-8">
+              <header className="border-b border-secondary pb-4">
+                <h1 className="text-3xl font-bold text-primary">Compliance & Shield</h1>
+                <p className="mt-2 text-lg text-tertiary">B2B outreach frameworks and privacy-first safeguards.</p>
+              </header>
+
+              <div className="prose prose-sm prose-slate max-w-none text-secondary">
+                <p>
+                  Operational security and legal compliance are the foundation of our high-volume engine. We operate under a strict <strong>Legitimate Interest</strong> framework to ensure every outreach is relevant and lawful.
+                </p>
+
+                <div className="my-8 grid gap-6 sm:grid-cols-3">
+                  <div className="flex flex-col gap-2 p-4 rounded-xl border border-secondary bg-secondary_subtle">
+                    <ShieldTick className="size-5 text-brand" />
+                    <h4 className="font-bold text-primary text-sm">Legitimate Interest</h4>
+                    <p className="text-xs text-tertiary leading-relaxed">We focus exclusively on high-value executives where there is a clear interest in event participation and professional networking.</p>
+                  </div>
+                  <div className="flex flex-col gap-2 p-4 rounded-xl border border-secondary bg-secondary_subtle">
+                    <Settings01 className="size-5 text-brand" />
+                    <h4 className="font-bold text-primary text-sm">Suppression Sync</h4>
+                    <p className="text-xs text-tertiary leading-relaxed">Automated suppression of existing customers, competitors, and active opportunities to prevent campaign collision.</p>
+                  </div>
+                  <div className="flex flex-col gap-2 p-4 rounded-xl border border-secondary bg-secondary_subtle">
+                    <Mail01 className="size-5 text-brand" />
+                    <h4 className="font-bold text-primary text-sm">Clear Opt-out</h4>
+                    <p className="text-xs text-tertiary leading-relaxed">Every communication includes a transparent, one-click unsubscribe mechanism that is instantly synced across our master database.</p>
+                  </div>
+                </div>
+
+                <h3 className="text-xl font-semibold text-primary mt-8">Technical Enforcement</h3>
+                <ul className="list-disc space-y-3 pl-5">
+                  <li><strong>DNC Filtering:</strong> National and internal Do Not Call lists are scrubbed in Layer 9 before mobile resolution completion.</li>
+                  <li><strong>Audit Trails:</strong> Every resolution event and compliance check is logged for full operational transparency.</li>
+                  <li><strong>Reputation Protection:</strong> Deliverability signals from Layer 6 feed back into the Shield logic to pause campaigns if bounce thresholds are approached.</li>
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
