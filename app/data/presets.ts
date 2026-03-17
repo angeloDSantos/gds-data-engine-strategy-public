@@ -72,10 +72,10 @@ export const builtInPresets: Preset[] = [
     id: "zoominfo_benchmark",
     name: "Benchmark — ZoomInfo-Like Premium",
     description: "Premium provider placeholder, high contract cost, fewer internal components",
-    providers_enabled: ["apollo", "cognism", "millionverifier"],
+    providers_enabled: ["zoominfo", "cognism", "millionverifier"],
     layer_routes: {
-      identity: ["apollo"],
-      email_resolution: ["apollo", "cognism"],
+      identity: ["zoominfo"],
+      email_resolution: ["zoominfo", "cognism"],
       verification: ["millionverifier"],
       phone: ["cognism"],
     },

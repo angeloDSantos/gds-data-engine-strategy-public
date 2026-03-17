@@ -193,6 +193,7 @@ export const providerCatalog: Provider[] = [
       public_available: false,
       manual_enterprise_override: true,
       unit_cost_per_identity: 0.3,
+      unit_cost_per_email: 0.3,
     },
     strengths: ["comprehensive B2B database", "high accuracy"],
     weaknesses: ["extremely expensive"],
