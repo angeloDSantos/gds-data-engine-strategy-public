@@ -149,9 +149,10 @@ function Header() {
                 </Button>
               ) : (
                 <div className="flex items-center gap-1.5">
-                  <Select
-                    size="sm"
-                    className="min-w-[180px]"
+                    <Select
+                      size="sm"
+                      aria-label="Select preset"
+                      className="min-w-[180px]"
                     selectedKey={currentPreset.id}
                     onSelectionChange={(k) => k && handlePresetAction(String(k))}
                     items={[
@@ -180,6 +181,7 @@ function Header() {
             <div className="flex items-center gap-3">
               <Select
                 size="sm"
+                aria-label="Select confidence mode"
                 className="w-32"
                 selectedKey={confidenceMode}
                 onSelectionChange={(k) => k && setConfidenceMode(k as any)}

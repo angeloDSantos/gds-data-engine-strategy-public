@@ -191,12 +191,12 @@ export function CostSummaryPanel() {
     // 3. INTERNAL SAVINGS LOGIC (Strategic Efficiency)
     // Gross Cost = Cost if we had zero internal logic/data (paying for every hit)
     // Net Cost = Cost after internal reuse, patterns, and resolution logic
-    const grossPricePerHit = 0.45; // Industry benchmark for high-quality verified mobile+email
-    const grossPotentialCost = identities * grossPricePerHit;
+    const totalRawCost = subscriptionTotal + cheapTotal + premiumTotal + verificationTotal + phoneTotal;
     
-    // Total savings should be significant. User expectation is ~25% of the total potential cost.
-    // We calculate it as the delta between gross potential and our optimized waterfall.
-    const internalSavings = Math.max(grossPotentialCost * 0.25, grossPotentialCost - (subscriptionTotal + cheapTotal + premiumTotal + verificationTotal + phoneTotal));
+    // User expectation is ~30% of the total stack cost is saved via internal data lookup.
+    // This amount should lower the stack cost.
+    const internalSavings = totalRawCost * 0.30;
+    const netStackCost = totalRawCost - internalSavings;
 
     // 3. Score Modeling
     enabledConfigs.forEach(config => {
@@ -218,7 +218,7 @@ export function CostSummaryPanel() {
     const normalize = (value: number) => Math.max(0, Math.min(1, value));
     
     // 4. Scoping for Phase Focus
-    let displayCost = subscriptionTotal + cheapTotal + premiumTotal + verificationTotal + phoneTotal;
+    let displayCost = netStackCost;
     let displaySavings = internalSavings;
     let focusLabel = "Global Stack Summary";
 

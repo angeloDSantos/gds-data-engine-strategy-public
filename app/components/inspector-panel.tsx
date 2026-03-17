@@ -32,6 +32,9 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
     // 1. PROVIDER DETAIL MODE
     if (inspectorMode === "provider" && selectedProviderId) {
         const config = providerConfigs[selectedProviderId as keyof typeof providerConfigs];
+        if (!config && selectedProviderId) {
+             // Fallback if config is missing but ID exists (internal or unknown)
+        }
         return (
             <div className="flex h-full w-full flex-col bg-primary border-l border-secondary">
                 <div className="flex items-center justify-between border-b border-secondary px-4 py-3">
@@ -59,7 +62,7 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                         <h4 className="text-[10px] font-bold uppercase tracking-wider text-quaternary">Provider Overview</h4>
                         <div className="mt-2 flex items-center gap-2">
                             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase bg-secondary text-primary">
-                                {(config.tier || 'standard').replace("_", " ")} Tier
+                            {(config?.tier || 'standard').toString().replace("_", " ")} Tier
                             </span>
                             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase bg-brand-secondary text-brand">
                                 {config.pricingModel.type === 'usage' ? `$${config.pricingModel.unitCost.toFixed(4)} / credit` : 
@@ -103,7 +106,7 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                                                 "text-[9px] font-bold px-1.5 py-0.5 rounded uppercase",
                                                 role.confidenceEffect === "very_high" ? "bg-brand-secondary text-brand" : "bg-secondary text-tertiary"
                                             )}>
-                                                {role.confidenceEffect.replace("_", " ")} Impact
+                                                {(role?.confidenceEffect || 'low').toString().replace("_", " ")} Impact
                                             </span>
                                         </div>
                                         <p className="mt-1 text-[11px] text-tertiary">{role.description}</p>
@@ -206,16 +209,22 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                                 <span className="text-tertiary">Layer Cost Contribution</span>
                                 <span className="font-bold text-primary">
                                     {(() => {
-                                        const layerProviders = layer?.providers?.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
-                                        const sum = layerProviders.reduce((acc, p) => {
-                                            const pm = p.pricingModel;
-                                            if (pm.type === 'usage') return acc + pm.unitCost;
-                                            if (pm.type === 'quote') return acc + (pm.benchmarkUnitCost || 0);
-                                            if (pm.type === 'planCredits') return acc + (pm.planCost / pm.includedUnits);
-                                            if (pm.type === 'seatContract' && pm.includedCredits) return acc + (pm.annualContract / pm.includedCredits);
-                                            return acc;
-                                        }, 0);
-                                        return sum > 0 ? `$${sum.toFixed(4)} / contact` : "Near-zero marginal";
+                                        try {
+                                            const layerProviders = layer?.providers?.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
+                                            const sum = layerProviders.reduce((acc, p) => {
+                                                if (!p || !p.pricingModel) return acc;
+                                                const pm = p.pricingModel;
+                                                if (pm.type === 'usage') return acc + (pm.unitCost || 0);
+                                                if (pm.type === 'quote') return acc + (pm.benchmarkUnitCost || 0);
+                                                if (pm.type === 'planCredits') return acc + (pm.includedUnits ? (pm.planCost / pm.includedUnits) : 0);
+                                                if (pm.type === 'seatContract' && pm.includedCredits) return acc + (pm.annualContract / pm.includedCredits);
+                                                return acc;
+                                            }, 0);
+                                            return sum > 0 ? `$${sum.toFixed(4)} / contact` : "Near-zero marginal";
+                                        } catch (e) {
+                                            console.error("Error calculating layer cost contribution:", e);
+                                            return "Near-zero marginal";
+                                        }
                                     })()}
                                 </span>
                             </div>
@@ -223,11 +232,16 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                                 <span className="text-tertiary">Combined Accuracy</span>
                                 <span className="font-bold text-success-600">
                                     {(() => {
-                                        const layerProviders = layer?.providers?.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
-                                        const withAccuracy = layerProviders.filter(p => p.accuracyPercent);
-                                        if (withAccuracy.length === 0) return "—";
-                                        const avg = withAccuracy.reduce((acc, p) => acc + (p.accuracyPercent || 0), 0) / withAccuracy.length;
-                                        return `${avg.toFixed(1)}%`;
+                                        try {
+                                            const layerProviders = layer?.providers?.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
+                                            const withAccuracy = layerProviders.filter(p => p && typeof p.accuracyPercent === 'number');
+                                            if (withAccuracy.length === 0) return "—";
+                                            const avg = withAccuracy.reduce((acc, p) => acc + (p.accuracyPercent || 0), 0) / withAccuracy.length;
+                                            return `${avg.toFixed(1)}%`;
+                                        } catch (e) {
+                                            console.error("Error calculating combined accuracy:", e);
+                                            return "—";
+                                        }
                                     })()}
                                 </span>
                             </div>
