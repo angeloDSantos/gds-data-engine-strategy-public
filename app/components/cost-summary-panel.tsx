@@ -188,7 +188,10 @@ export function CostSummaryPanel() {
     const phoneValidationTotal = outputs.phone_validation_hits * phoneValidationCost;
     const phoneTotal = phoneSourceTotal + phoneValidationTotal;
 
-    const internalSavings = outputs.provider_calls_avoided * (cheapCost || 0.02);
+    // 3. INTERNAL SAVINGS LOGIC (The 30% reduction efficiency)
+    // Benchmark: What it would cost to buy this data from a premium provider (e.g. $0.65/hit)
+    const opportunityCostBenchmark = 0.45; 
+    const internalSavings = outputs.provider_calls_avoided * opportunityCostBenchmark;
 
     // 3. Score Modeling
     enabledConfigs.forEach(config => {

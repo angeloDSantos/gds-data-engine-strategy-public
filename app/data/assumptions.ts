@@ -143,7 +143,12 @@ export function calculateOutputs(
       (known_good_emails + pattern_candidates + cheap_pass_hits + premium_fallback_hits)
     : 0;
 
-  const provider_calls_avoided = identities * (assumptions.internal_domain_reuse_rate + assumptions.internal_pattern_reuse_rate + assumptions.known_good_email_reuse_rate);
+  // Refined savings logic: Any path that BYPASSES a paid credit lookup
+  const internal_reuse_rate = assumptions.internal_domain_reuse_rate || 0.45;
+  const pattern_reuse_rate = assumptions.internal_pattern_reuse_rate || 0.35;
+  const email_reuse_rate = assumptions.known_good_email_reuse_rate || 0.22;
+  
+  const provider_calls_avoided = identities * (internal_reuse_rate + pattern_reuse_rate + email_reuse_rate);
 
   const accuracy_phone_pre = total_email_resolved > 0 ? (identities > 0 ? (reused_phones * 0.95 + source_hits * (max_phone_accuracy / 100)) / (reused_phones + source_hits) : 0) : 0;
 
