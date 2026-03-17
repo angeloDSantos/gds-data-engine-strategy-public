@@ -373,6 +373,7 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         strengths: ["Premium company telemetry", "Real-time lookups", "Rich firmographics"],
         weaknesses: ["High cost for high volume", "Strict API limits"],
         rolesByLayer: {
+            layer_1: { role: "Firmographic Enrichment", costEffect: "high", confidenceEffect: "very_high", description: "Provides high-fidelity company telemetry and firmographic signals." },
             layer_3: { role: "Domain Resolution", costEffect: "high", confidenceEffect: "very_high", description: "Resolves root domains and company meta-data." },
         },
     },
@@ -388,6 +389,7 @@ export const providerConfigs: Record<ProviderId, ProviderConfig> = {
         strengths: ["Bulk domain processing", "Clean UI for data cleaning", "Cost-effective lookups"],
         weaknesses: ["Smaller identity graph than PDL"],
         rolesByLayer: {
+            layer_1: { role: "Bulk Org Resolution", costEffect: "medium", confidenceEffect: "high", description: "Efficiently maps raw organization signals to master records." },
             layer_3: { role: "Bulk Domain Mapping", costEffect: "medium", confidenceEffect: "high", description: "Efficiently maps company names to root domains." },
         },
     },
