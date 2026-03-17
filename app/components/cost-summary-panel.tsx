@@ -193,9 +193,9 @@ export function CostSummaryPanel() {
     // Net Cost = Cost after internal reuse, patterns, and resolution logic
     const totalRawCost = subscriptionTotal + cheapTotal + premiumTotal + verificationTotal + phoneTotal;
     
-    // User expectation is ~30% of the total stack cost is saved via internal data lookup.
+    // User expectation is ~50% of the total stack cost is saved via internal data lookup.
     // This amount should lower the stack cost.
-    const internalSavings = totalRawCost * 0.30;
+    const internalSavings = totalRawCost * 0.50;
     const netStackCost = totalRawCost - internalSavings;
 
     // 3. Score Modeling
