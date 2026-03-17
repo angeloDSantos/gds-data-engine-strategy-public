@@ -128,6 +128,16 @@ export const useDiagramStore = create<DiagramState>()(
         });
       },
     }),
-    { name: "gds-diagram-store", partialize: (s) => ({ assumptions: s.assumptions, presets: s.presets }) }
+    { 
+      name: "gds-diagram-store", 
+      partialize: (s) => ({ 
+        assumptions: s.assumptions, 
+        presets: s.presets,
+        targetScale: s.targetScale,
+        emailRatio: s.emailRatio,
+        catchAllRatio: s.catchAllRatio,
+        mobileRatio: s.mobileRatio
+      }) 
+    }
   )
 );
