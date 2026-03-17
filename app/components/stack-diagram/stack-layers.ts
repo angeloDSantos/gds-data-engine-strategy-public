@@ -192,7 +192,7 @@ export const stackLayers: StackLayerDef[] = [
     id: "layer_9",
     label: "Suppression / Compliance",
     purpose: "Prevent use of restricted contacts",
-    narrative: "Enforces legal and commercial compliance by suppressing existing customers, competitors, and global opt-out lists.",
+    narrative: "Enforces legal and commercial compliance via Legitimate Interest (targeting high-intent event audiences), continuous suppression list synchronization, and clear, one-click opt-out mechanisms to protect sender reputation.",
     providers: ["internal"],
     subLayers: ["DNC lists", "opt-out", "CRM sync", "audit trail"],
     outputSpec: "{Compliant Lead Set, Suppression Reason Code}",
