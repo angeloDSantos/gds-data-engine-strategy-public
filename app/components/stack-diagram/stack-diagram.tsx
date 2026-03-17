@@ -13,6 +13,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useDiagramStore } from "../../store/diagram-store";
 import { cx } from "@/utils/cx";
+import { ErrorBoundary } from "../error-boundary";
 import { LayerNode } from "./layer-node";
 import { buildLayerDetailDiagram, buildOverviewDiagram, stackLayers } from "./stack-layers";
 import { ChevronLeft, ChevronRight, MarkerPin01, Play } from "@untitledui/icons";
@@ -298,9 +299,26 @@ function StackDiagramInner() {
 
 export function StackDiagram() {
   return (
-    <ReactFlowProvider>
-      <StackDiagramInner />
-    </ReactFlowProvider>
+    <ErrorBoundary 
+      fallback={
+        <div className="h-full w-full flex items-center justify-center bg-secondary_subtle border border-secondary rounded-lg p-8 text-center">
+          <div className="max-w-xs space-y-4">
+            <div className="text-sm font-bold text-primary">Diagram Visualization Unstable</div>
+            <p className="text-xs text-secondary">The technical engine for this visualization encountered a rendering error. Our team has been notified.</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="text-xs font-bold text-brand hover:underline"
+            >
+              Refresh View
+            </button>
+          </div>
+        </div>
+      }
+    >
+      <ReactFlowProvider>
+        <StackDiagramInner />
+      </ReactFlowProvider>
+    </ErrorBoundary>
   );
 }
 

@@ -7,6 +7,7 @@ import { useDiagramStore } from "../store/diagram-store";
 import { providerConfigs, ProviderId } from "../data/providers";
 import { stackLayers } from "./stack-diagram/stack-layers";
 import { CostSummaryPanel } from "./cost-summary-panel";
+import { ErrorBoundary } from "./error-boundary";
 import { cx } from "@/utils/cx";
 
 export function InspectorPanel({ onClose }: { onClose?: () => void }) {
@@ -125,8 +126,26 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
         );
     }
 
+    // Wrap the rest in a generic boundary
+    return (
+        <ErrorBoundary fallback={
+            <div className="flex h-full w-full flex-col items-center justify-center p-8 bg-primary border-l border-secondary">
+                <Activity className="size-12 text-error-600 opacity-20 mb-4" />
+                <h3 className="text-sm font-bold text-primary">Detail View Crashed</h3>
+                <p className="text-xs text-secondary text-center mt-2">There was an error rendering this specific module's details. The rest of the app is unaffected.</p>
+                <Button size="sm" color="secondary" className="mt-4" onClick={handleClose}>Back to Summary</Button>
+            </div>
+        }>
+            <InspectorContent mode={inspectorMode} selectedNodeId={selectedNodeId} handleClose={handleClose} />
+        </ErrorBoundary>
+    );
+}
+
+function InspectorContent({ mode, selectedNodeId, handleClose }: any) {
+    const { setSelectedProvider, setSelectedNode } = useDiagramStore();
+
     // 2. NODE DETAIL MODE
-    if (inspectorMode === "node" && selectedNodeId) {
+    if (mode === "node" && selectedNodeId) {
         // Search top-level layers first
         let layer = stackLayers.find(l => l.id === selectedNodeId);
 

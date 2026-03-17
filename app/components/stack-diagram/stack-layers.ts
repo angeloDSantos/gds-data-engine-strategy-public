@@ -378,6 +378,7 @@ export function buildOverviewDiagram(): { nodes: Node[]; edges: Edge[] } {
  * Build a zoomed-in diagram for a specific layer.
  */
 export function buildLayerDetailDiagram(layerId: string): { nodes: Node[]; edges: Edge[] } {
+  if (!layerId) return buildOverviewDiagram();
   const layer = stackLayers.find((l) => l.id === layerId);
   if (!layer) return buildOverviewDiagram();
 
@@ -454,8 +455,21 @@ export function buildLayerDetailDiagram(layerId: string): { nodes: Node[]; edges
   }
 
   // Fallback to old simple horizontal list logic
-  if (!layer.subLayers || layer.subLayers.length === 0) {
-    return buildOverviewDiagram();
+  if (!layer?.subLayers || !Array.isArray(layer.subLayers) || layer.subLayers.length === 0) {
+    // If no rich flow and no simple sublayers, return a single central node representing the layer
+    const nodes: Node[] = [{
+      id: `${layer.id}_summary`,
+      type: "layerNode",
+      position: { x: 0, y: 150 },
+      draggable: false,
+      data: {
+        label: layer.label,
+        purpose: layer.purpose,
+        providers: layer.providers || [],
+        isOverview: false,
+      }
+    }];
+    return { nodes, edges: [] };
   }
 
   const nodes: Node[] = [];
