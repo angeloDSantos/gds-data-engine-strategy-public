@@ -159,7 +159,17 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                     </Button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                {!layer ? (
+                    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-4">
+                        <Activity className="size-12 text-tertiary opacity-20" aria-hidden />
+                        <div className="space-y-1">
+                            <h4 className="text-sm font-bold text-primary">Module Analysis in Progress</h4>
+                            <p className="text-xs text-tertiary">Technical specifications for "{selectedNodeId}" are currently being mapped.</p>
+                        </div>
+                        <Button size="sm" color="secondary" onClick={handleClose}>Close Inspector</Button>
+                    </div>
+                ) : (
+                    <div className="flex-1 overflow-y-auto p-4 space-y-6">
                     <section>
                         <h4 className="text-[10px] font-bold uppercase tracking-wider text-quaternary">Module Purpose</h4>
                         <p className="mt-2 text-xs leading-relaxed text-secondary">
@@ -170,7 +180,7 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                     <section>
                         <h4 className="text-[10px] font-bold uppercase tracking-wider text-quaternary mb-2">Enabled Providers</h4>
                         <div className="grid grid-cols-1 gap-2">
-                            {layer?.providers.map(pid => {
+                            {layer?.providers?.map(pid => {
                                 const pConfig = providerConfigs[pid as keyof typeof providerConfigs];
                                 return (
                                     <button
@@ -196,7 +206,7 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                                 <span className="text-tertiary">Layer Cost Contribution</span>
                                 <span className="font-bold text-primary">
                                     {(() => {
-                                        const layerProviders = layer?.providers.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
+                                        const layerProviders = layer?.providers?.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
                                         const sum = layerProviders.reduce((acc, p) => {
                                             const pm = p.pricingModel;
                                             if (pm.type === 'usage') return acc + pm.unitCost;
@@ -213,7 +223,7 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                                 <span className="text-tertiary">Combined Accuracy</span>
                                 <span className="font-bold text-success-600">
                                     {(() => {
-                                        const layerProviders = layer?.providers.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
+                                        const layerProviders = layer?.providers?.map(id => providerConfigs[id as ProviderId]).filter(Boolean) || [];
                                         const withAccuracy = layerProviders.filter(p => p.accuracyPercent);
                                         if (withAccuracy.length === 0) return "—";
                                         const avg = withAccuracy.reduce((acc, p) => acc + (p.accuracyPercent || 0), 0) / withAccuracy.length;
@@ -224,6 +234,7 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                         </div>
                     </section>
                 </div>
+                )}
             </div>
         );
     }
