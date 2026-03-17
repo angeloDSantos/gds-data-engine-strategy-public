@@ -162,9 +162,9 @@ export function CostSummaryPanel() {
     };
 
     const avgVerifyCost = getMinUnitCost(byTier.verification) || 0.0015;
-    const cheapCost = getMinUnitCost(byTier.cheap);
-    const midCost = getMinUnitCost(byTier.mid);
-    const premiumCost = getMinUnitCost(byTier.premium);
+    const cheapCost = getMinUnitCost(byTier.cheap) || 0.002;
+    const midCost = getMinUnitCost(byTier.mid) || 0.04;
+    const premiumCost = getMinUnitCost(byTier.premium) || 0.16;
 
     // 2. Waterfall Usage Logic
     const vLoad = outputs.waterfall.pattern + outputs.waterfall.cheap + outputs.waterfall.premium;
@@ -189,14 +189,16 @@ export function CostSummaryPanel() {
     const phoneTotal = phoneSourceTotal + phoneValidationTotal;
 
     // 3. INTERNAL SAVINGS LOGIC (Strategic Efficiency)
-    // Gross Cost = Cost if we had zero internal logic/data (paying for every hit)
-    // Net Cost = Cost after internal reuse, patterns, and resolution logic
-    const totalRawCost = subscriptionTotal + cheapTotal + premiumTotal + verificationTotal + phoneTotal;
+    // 30% of total volume is free via internal lookup. 
+    // This value is modeled as a weighted mix: 30% cheap, 50% medium (mid), 20% expensive (premium).
+    const savingsVolume = identities * 0.30;
+    const weightedSavingRate = (0.3 * cheapCost) + (0.5 * midCost) + (0.2 * premiumCost);
+    const internalSavings = savingsVolume * weightedSavingRate;
     
-    // User expectation is ~50% of the total stack cost is saved via internal data lookup.
-    // This amount should lower the stack cost.
-    const internalSavings = totalRawCost * 0.50;
-    const netStackCost = totalRawCost - internalSavings;
+    // The "Stack Cost" consists of subscriptions plus the usage for the 70% of contacts that require external resolution/verification.
+    // The waterfall logic in calculateOutputs already approximates this, but we ensure it aligns with the 70% chargeable policy.
+    const rawUsageTotal = cheapTotal + premiumTotal + verificationTotal + phoneTotal;
+    const netStackCost = subscriptionTotal + rawUsageTotal;
 
     // 3. Score Modeling
     enabledConfigs.forEach(config => {
