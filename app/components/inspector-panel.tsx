@@ -44,7 +44,17 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                     </Button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                {!config ? (
+                    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-4">
+                        <Activity className="size-12 text-tertiary opacity-20" aria-hidden />
+                        <div className="space-y-1">
+                            <h4 className="text-sm font-bold text-primary">Provider Details Unavailable</h4>
+                            <p className="text-xs text-tertiary">Economic data for "{selectedProviderId}" is currently being modeled.</p>
+                        </div>
+                        <Button size="sm" color="secondary" onClick={handleClose}>Close Inspector</Button>
+                    </div>
+                ) : (
+                    <div className="flex-1 overflow-y-auto p-4 space-y-6">
                     <section>
                         <h4 className="text-[10px] font-bold uppercase tracking-wider text-quaternary">Provider Overview</h4>
                         <div className="mt-2 flex items-center gap-2">
