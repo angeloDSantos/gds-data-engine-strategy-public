@@ -217,7 +217,19 @@ function StackDiagramInner() {
         onNodeDoubleClick={onNodeDoubleClick}
         nodeTypes={nodeTypes}
         onInit={(instance) => {
-          setTimeout(() => instance.fitView({ padding: 0.15, duration: 300 }), 50);
+          setTimeout(() => {
+            const nodes = instance.getNodes();
+            const startNode = nodes.find(n => n.id === "layer_1");
+            if (startNode) {
+              instance.fitView({
+                nodes: [startNode],
+                padding: isMobile ? 0.4 : 0.8,
+                duration: 400
+              });
+            } else {
+              instance.fitView({ padding: 0.15, duration: 300 });
+            }
+          }, 50);
         }}
         minZoom={0.1}
         maxZoom={2.5}
