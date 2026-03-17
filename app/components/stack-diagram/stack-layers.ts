@@ -56,7 +56,7 @@ export const stackLayers: StackLayerDef[] = [
     outputWrites: ["unified company profile", "dedupe event"],
     phaseNumber: 1,
     subLayersFlow: [
-      { id: "l1_i1", label: "External Signals", kind: "input", purpose: "Apollo, PDL raw org records" },
+      { id: "l1_i1", label: "External Signals", kind: "input", purpose: "Crunchbase, clearbit, datablist" },
       { id: "l1_p1", label: "Check Known Company?", kind: "process", purpose: "Consult internal master graph before spend", providers: ["internal"] },
       { id: "l1_p2", label: "Unified Dedupe", kind: "process", purpose: "Merge subsidiaries & variants", providers: ["internal"] },
       { id: "l1_o1", label: "Master Company Graph", kind: "output", purpose: "Stable unified accounts" },
@@ -75,7 +75,7 @@ export const stackLayers: StackLayerDef[] = [
     phaseNumber: 2,
     subLayersFlow: [
       { id: "l2_p1", label: "Internal Identity Match", kind: "process", purpose: "Reuse existing truth before resolution", providers: ["internal"] },
-      { id: "l2_p2", label: "Social Identity Resolve", kind: "process", purpose: "Merge resume & social signals", providers: ["apollo", "pdl", "rocketreach"] },
+      { id: "l2_p2", label: "Social Identity Resolve", kind: "process", purpose: "Merge resume & social signals", providers: ["emailsearch_io", "linkedin", "proprietary tools"] },
       { id: "l2_o1", label: "Resolved Identity", kind: "output", purpose: "Stable professional profile" },
     ],
   },
@@ -129,8 +129,8 @@ export const stackLayers: StackLayerDef[] = [
     phaseNumber: 4,
     subLayersFlow: [
       { id: "l5_p1", label: "Check Known-Good?", kind: "process", purpose: "Reuse verified truth first", providers: ["internal"] },
-      { id: "l5_p2", label: "Cheap Provider Pass", kind: "process", purpose: "First pass via low-cost vendors", providers: ["emailsearch_io", "apollo", "prospeo"] },
-      { id: "l5_p3", label: "Premium Fallback", kind: "process", purpose: "High-cost resolution for misses", providers: ["pdl", "rocketreach"] },
+      { id: "l5_p2", label: "Cheap Provider Pass", kind: "process", purpose: "First pass via low-cost vendors", providers: ["emailsearch_io", "apollo", "rocketreach"] },
+      { id: "l5_p3", label: "Premium Fallback", kind: "process", purpose: "High-cost resolution for misses", providers: ["pdl", "prospeo"] },
       { id: "l5_o1", label: "Email Candidates", kind: "output", purpose: "Ready for verification" },
     ],
   },
@@ -182,8 +182,8 @@ export const stackLayers: StackLayerDef[] = [
     subLayersFlow: [
       { id: "l8_i1", label: "Target Person", kind: "input", purpose: "Resolved identity from Layer 2" },
       { id: "l8_p1", label: "Normalization", kind: "process", purpose: "Standardize E.164 formats", providers: ["internal"] },
-      { id: "l8_p2", label: "Line Discovery", kind: "process", purpose: "Detect Mobile/VoIP/Landline", providers: ["twilio_lookup", "telesign"] },
-      { id: "l8_p3", label: "Carrier Check", kind: "process", purpose: "Route & connectivity validation", providers: ["telesign"] },
+      { id: "l8_p2", label: "Line Discovery", kind: "process", purpose: "Detect Mobile/VoIP/Landline", providers: ["rocketreach", "apollo", "pdl"] },
+      { id: "l8_p3", label: "Carrier Check", kind: "process", purpose: "Route & connectivity validation", providers: ["twilio", "telesign", "hlr_lookup"] },
       { id: "l8_p4", label: "Eligibility Logic", kind: "process", purpose: "Apply SMS policy (Global)", providers: ["internal"] },
       { id: "l8_o1", label: "Verified Mobile Pool", kind: "output", purpose: "SMS-ready records" },
     ],
@@ -242,6 +242,7 @@ export const stackLayers: StackLayerDef[] = [
       { id: "l11_o1", label: "Verified Emails", kind: "output", purpose: "Highest deliverability tier" },
       { id: "l11_o2", label: "Managed Catch-all", kind: "output", purpose: "High-confidence internal pool" },
       { id: "l11_o3", label: "SMS Mobiles", kind: "output", purpose: "Compliance-ready mobiles" },
+      { id: "l11_o4", label: "{Data Used To Improve Pattern Recognition}", kind: "output", purpose: "Continuous learning loop" },
     ],
   },
 ];
@@ -458,10 +459,17 @@ export function buildLayerDetailDiagram(layerId: string): { nodes: Node[]; edges
     }
 
     outputs.forEach(output => {
-      if (lastProcess) {
+      if (lastProcess && output.id !== "l11_o4") {
         edges.push({ id: `e-${lastProcess.id}-${output.id}`, source: lastProcess.id, target: output.id, animated: true });
       }
     });
+
+    // Special case for Layer 11 final box
+    if (layer.id === "layer_11") {
+      ["l11_o1", "l11_o2", "l11_o3"].forEach(sourceId => {
+        edges.push({ id: `e-${sourceId}-l11_o4`, source: sourceId, target: "l11_o4", animated: true });
+      });
+    }
 
     return { nodes, edges };
   }

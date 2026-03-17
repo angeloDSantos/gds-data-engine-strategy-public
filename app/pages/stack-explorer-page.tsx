@@ -186,50 +186,25 @@ export function StackExplorerPage() {
         </main>
 
         {/* Right panel - Dynamic Inspector */}
-        <aside
-          className={cx(
-            "flex shrink-0 transition-all duration-300 ease-in-out border-l border-secondary bg-primary relative",
-            isMobile
-              ? (isInspectorOpen ? "fixed inset-0 z-[200] w-full h-full" : "w-0 overflow-hidden")
-              : (isInspectorOpen ? "w-80" : "w-0 overflow-hidden")
-          )}
-        >
-          {isInspectorOpen && (
-            <div className="flex flex-col h-full w-full overflow-hidden">
-              {isMobile && (
-                <div className="p-4 border-b border-secondary bg-primary sticky top-0 z-[210]">
-                  <button 
-                    onClick={() => setIsInspectorOpen(false)}
-                    className="flex items-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-bold text-primary shadow-sm active:scale-95"
-                  >
-                    <ChevronLeft className="size-4" />
-                    Back
-                  </button>
-                </div>
-              )}
-              <div className="flex-1 overflow-y-auto">
-                <InspectorPanel onClose={() => setIsInspectorOpen(false)} />
-              </div>
-            </div>
-          )}
-
-          {!isMobile && (
-            <button
-              onClick={() => setIsInspectorOpen(!isInspectorOpen)}
-              className={cx(
-                "absolute z-10 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-secondary bg-primary shadow-sm hover:bg-primary_hover transition-all duration-300",
-                isInspectorOpen ? "-left-4" : "-left-10"
-              )}
-              aria-label={isInspectorOpen ? "Collapse inspector" : "Expand inspector"}
-            >
-              {isInspectorOpen ? (
-                <ChevronRight className="size-4 text-secondary" />
-              ) : (
-                <ChevronLeft className="size-4 text-secondary" />
-              )}
-            </button>
-          )}
         </aside>
+
+        {/* Right Sidebar Toggle Button */}
+        {!isMobile && (
+          <button
+            onClick={() => setIsInspectorOpen(!isInspectorOpen)}
+            className={cx(
+              "absolute z-[100] top-4 flex h-8 w-8 items-center justify-center rounded-full border border-secondary bg-primary shadow-sm hover:bg-primary_hover transition-all duration-300",
+              isInspectorOpen ? "right-[304px]" : "right-4"
+            )}
+            aria-label={isInspectorOpen ? "Collapse inspector" : "Expand inspector"}
+          >
+            {isInspectorOpen ? (
+              <ChevronRight className="size-4 text-secondary" />
+            ) : (
+              <ChevronLeft className="size-4 text-secondary" />
+            )}
+          </button>
+        )}
         
         {isMobile && !isInspectorOpen && (
           <button

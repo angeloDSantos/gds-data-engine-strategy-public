@@ -8,6 +8,7 @@ import {
   useReactFlow,
   Panel,
   ReactFlowProvider,
+  useStoreApi,
   type NodeTypes,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
@@ -17,6 +18,7 @@ import { ErrorBoundary } from "../error-boundary";
 import { LayerNode } from "./layer-node";
 import { buildLayerDetailDiagram, buildOverviewDiagram, stackLayers } from "./stack-layers";
 import { ChevronLeft, ChevronRight, MarkerPin01, Play } from "@untitledui/icons";
+import { useStoreApi } from "@xyflow/react";
 
 const nodeTypes: NodeTypes = { layerNode: LayerNode };
 
@@ -124,6 +126,24 @@ function StackDiagramInner() {
       setDiagramError(e as Error);
     }
   }, [initialNodes, initialEdges, isDetailView, isMobile, reactFlow, setNodes, setEdges]);
+
+  const handleBackToOverview = useCallback(() => {
+    const prevLayerId = selectedLayerId;
+    setSelectedLayer(null);
+    
+    if (prevLayerId) {
+      setTimeout(() => {
+        const node = reactFlow.getNode(prevLayerId);
+        if (node) {
+          reactFlow.fitView({
+            nodes: [node],
+            duration: 600,
+            padding: 2.0,
+          });
+        }
+      }, 50);
+    }
+  }, [selectedLayerId, setSelectedLayer, reactFlow]);
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: { id: string }) => {
@@ -289,9 +309,10 @@ function StackDiagramInner() {
             <div className="flex items-center gap-2 text-sm">
               <button
                 type="button"
-                onClick={() => setSelectedLayer(null)}
-                className="font-semibold text-tertiary hover:text-primary transition-colors"
+                onClick={handleBackToOverview}
+                className="flex items-center gap-1.5 font-semibold text-tertiary hover:text-primary transition-colors group"
               >
+                <ChevronLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
                 Full Stack
               </button>
               <ChevronRight className="size-4 text-quaternary" />
