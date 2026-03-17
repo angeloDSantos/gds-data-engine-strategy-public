@@ -1,12 +1,105 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useDiagramStore } from "../store/diagram-store";
 import { calculateOutputs } from "../data/assumptions";
 import { providerConfigs, ProviderId } from "../data/providers";
+import { Settings01, X, Zap } from "@untitledui/icons";
+import { Button } from "@/components/base/buttons/button";
+
+function RatioSettingsPopover({ 
+  ratios, 
+  setRatios 
+}: { 
+  ratios: { email: number; catchAll: number; mobile: number }; 
+  setRatios: (ratios: any) => void; 
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <Button
+        size="sm"
+        color="tertiary"
+        className="px-2"
+        onClick={() => setIsOpen(!isOpen)}
+        title="Ratio Management"
+      >
+        <Settings01 className="size-4" />
+      </Button>
+
+      {isOpen && (
+        <div className="absolute right-0 top-10 z-[100] w-64 rounded-xl border border-secondary bg-primary p-4 shadow-xl ring-1 ring-primary/10">
+          <div className="flex items-center justify-between mb-4 pb-2 border-b border-secondary">
+            <h4 className="text-xs font-bold text-primary uppercase tracking-wider">Session Ratios (%)</h4>
+            <button onClick={() => setIsOpen(false)} className="text-tertiary hover:text-primary">
+              <X className="size-4" />
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <div className="flex justify-between">
+                <label className="text-[10px] font-bold text-tertiary uppercase">Emails</label>
+                <span className="text-[10px] font-bold text-brand">{(ratios.email * 100).toFixed(0)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="1" step="0.01" 
+                className="w-full accent-brand"
+                value={ratios.email}
+                onChange={(e) => setRatios({ email: parseFloat(e.target.value) })}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between">
+                <label className="text-[10px] font-bold text-tertiary uppercase">Catch-Alls</label>
+                <span className="text-[10px] font-bold text-brand">{(ratios.catchAll * 100).toFixed(0)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="1" step="0.01" 
+                className="w-full accent-brand"
+                value={ratios.catchAll}
+                onChange={(e) => setRatios({ catchAll: parseFloat(e.target.value) })}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between">
+                <label className="text-[10px] font-bold text-tertiary uppercase">Mobiles</label>
+                <span className="text-[10px] font-bold text-brand">{(ratios.mobile * 100).toFixed(0)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="1" step="0.01" 
+                className="w-full accent-brand"
+                value={ratios.mobile}
+                onChange={(e) => setRatios({ mobile: parseFloat(e.target.value) })}
+              />
+            </div>
+            
+            <p className="text-[9px] text-tertiary italic leading-tight pt-1">
+              Adjusting these ratios overrides the bottom-up probability model for the current session.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function CostSummaryPanel() {
-  const { assumptions, currentPreset, billingPeriod, costViewMode, selectedNodeId } = useDiagramStore();
+  const { 
+    assumptions, 
+    currentPreset, 
+    billingPeriod, 
+    costViewMode, 
+    selectedNodeId,
+    targetScale,
+    emailRatio,
+    catchAllRatio,
+    mobileRatio,
+    setRatios
+  } = useDiagramStore();
 
   const metrics = useMemo(() => {
     const enabledIds = currentPreset.providers_enabled as ProviderId[];
@@ -25,18 +118,22 @@ export function CostSummaryPanel() {
     const availability = {
       has_cheap: byTier.cheap.length > 0,
       has_premium: byTier.mid.length > 0 || byTier.premium.length > 0,
-      has_phone: byTier.phone.length > 0
+      has_phone: byTier.phone.length > 0,
+      max_cheap_accuracy: Math.max(0, ...byTier.cheap.map(c => c.accuracyPercent || 0)),
+      max_premium_accuracy: Math.max(0, ...[...byTier.mid, ...byTier.premium].map(c => c.accuracyPercent || 0)),
+      max_phone_accuracy: Math.max(0, ...byTier.phone.map(c => c.accuracyPercent || 0)),
+      max_verification_accuracy: Math.max(0, ...byTier.verification.map(c => c.accuracyPercent || 0))
     };
 
-    const outputs = calculateOutputs(assumptions, assumptions.annual_target_identities, availability);
+    const identities = targetScale * 1_000_000;
+    const overrides = { emailRatio, catchAllRatio, mobileRatio };
+    const outputs = calculateOutputs(assumptions, identities, overrides, availability);
 
     let subscriptionTotal = 0;
     let waterfallUsageTotal = 0;
     let identityBoost = 0;
     let emailBoost = 0;
     let phoneBoost = 0;
-
-    const identities = assumptions.annual_target_identities;
 
     // 1. Subscriptions & Base Costs
     enabledConfigs.forEach(config => {
@@ -48,50 +145,50 @@ export function CostSummaryPanel() {
       }
     });
 
-    const getEffectiveUnitCost = (configs: typeof enabledConfigs) => {
+    const getMinUnitCost = (configs: typeof enabledConfigs) => {
       if (configs.length === 0) return 0;
-      return configs.reduce((sum, c) => {
+      const costs = configs.map(c => {
         const pm = c.pricingModel;
-        if (pm.type === "usage") return sum + pm.unitCost;
-        if (pm.type === "quote") return sum + (pm.benchmarkUnitCost || 0);
-        if (pm.type === "planCredits") return sum + (pm.planCost / pm.includedUnits);
+        if (pm.type === "usage") return pm.unitCost;
+        if (pm.type === "quote") return pm.benchmarkUnitCost || 0;
+        if (pm.type === "planCredits") return pm.planCost / pm.includedUnits;
         if (pm.type === "seatContract") {
-          return sum + (pm.annualContract / (pm.includedCredits || identities));
+          return pm.annualContract / (pm.includedCredits || (targetScale * 1_000_000));
         }
-        return sum;
-      }, 0) / configs.length;
+        return 0;
+      }).filter(cost => cost > 0);
+      
+      return costs.length > 0 ? Math.min(...costs) : 0;
     };
 
-    const avgVerifyCost = getEffectiveUnitCost(byTier.verification) || 0.0015;
-    const cheapCost = getEffectiveUnitCost(byTier.cheap);
-    const midCost = getEffectiveUnitCost(byTier.mid);
-    const premiumCost = getEffectiveUnitCost(byTier.premium);
+    const avgVerifyCost = getMinUnitCost(byTier.verification) || 0.0015;
+    const cheapCost = getMinUnitCost(byTier.cheap);
+    const midCost = getMinUnitCost(byTier.mid);
+    const premiumCost = getMinUnitCost(byTier.premium);
 
     // 2. Waterfall Usage Logic
     const vLoad = outputs.waterfall.pattern + outputs.waterfall.cheap + outputs.waterfall.premium;
-    // Reduced multiplier from 3.5 to 1.2 - GDS Pattern Engine solves most catch-alls internally.
     const verificationTotal = vLoad * avgVerifyCost * 1.2;
     
     let cheapTotal = 0;
     if (cheapCost > 0) cheapTotal = outputs.waterfall.cheap * cheapCost;
 
-    const avgPremium = (midCost + premiumCost) / ((midCost > 0 && premiumCost > 0) ? 2 : (midCost > 0 || premiumCost > 0 ? 1 : 1));
+    const avgPremium = ((midCost || 0) + (premiumCost || 0)) / ((midCost > 0 && premiumCost > 0) ? 2 : (midCost > 0 || premiumCost > 0 ? 1 : 1));
     const finalPremium = (midCost > 0 || premiumCost > 0) ? avgPremium : 0;
     let premiumTotal = 0;
     if (finalPremium > 0) premiumTotal = outputs.waterfall.premium * finalPremium;
 
-    // Corrected Phone Logic: Source (RocketReach $0.05) vs Validation (HLR <$0.01)
-    const phoneSourceCost = providerConfigs.rocketreach.pricingModel.type === 'quote' ? (providerConfigs.rocketreach.pricingModel.benchmarkUnitCost || 0.05) : 0.05;
-    const phoneValidationCost = providerConfigs.hlr_lookup.pricingModel.type === 'usage' ? providerConfigs.hlr_lookup.pricingModel.unitCost : 0.0045;
+    // Pull phone costs from config if possible
+    const rrConfig = providerConfigs.rocketreach;
+    const hlrConfig = providerConfigs.hlr_lookup;
+    const phoneSourceCost = rrConfig.pricingModel.type === 'quote' ? (rrConfig.pricingModel.benchmarkUnitCost || 0.16) : 0.16;
+    const phoneValidationCost = hlrConfig.pricingModel.type === 'usage' ? hlrConfig.pricingModel.unitCost : 0.0045;
     
-    // We only pay source cost for NEW hits (not database hits)
-    const phoneSourceTotal = (outputs as any).phone_source_hits * phoneSourceCost;
-    // We pay validation/HLR for all candidates found (to be safe)
-    const phoneValidationTotal = (outputs as any).phone_validation_hits * phoneValidationCost;
-    
+    const phoneSourceTotal = outputs.phone_source_hits * phoneSourceCost;
+    const phoneValidationTotal = outputs.phone_validation_hits * phoneValidationCost;
     const phoneTotal = phoneSourceTotal + phoneValidationTotal;
 
-    const internalSavings = outputs.provider_calls_avoided * (cheapCost || 0.15);
+    const internalSavings = outputs.provider_calls_avoided * (cheapCost || 0.02);
 
     // 3. Score Modeling
     enabledConfigs.forEach(config => {
@@ -118,10 +215,10 @@ export function CostSummaryPanel() {
     let focusLabel = "Global Stack Summary";
 
     if (costViewMode === "phase" && selectedNodeId) {
-      const isLayer5 = selectedNodeId === "layer_5"; // Resolution Pipeline
-      const isLayer6 = selectedNodeId === "layer_6"; // Verification
-      const isLayer8 = selectedNodeId === "layer_8"; // Phone
-      const isLayer4 = selectedNodeId === "layer_4" || selectedNodeId === "layer_7"; // Pattern/Catchall logic
+      const isLayer5 = selectedNodeId === "layer_5"; 
+      const isLayer6 = selectedNodeId === "layer_6"; 
+      const isLayer8 = selectedNodeId === "layer_8"; 
+      const isLayer4 = selectedNodeId === "layer_4" || selectedNodeId === "layer_7"; 
 
       if (isLayer5) {
         displayCost = cheapTotal + premiumTotal;
@@ -133,11 +230,10 @@ export function CostSummaryPanel() {
         displayCost = phoneTotal;
         focusLabel = "Mobile Enrichment & HLR Costs";
       } else if (isLayer4) {
-        displayCost = subscriptionTotal * 0.1; // Marginal infra
+        displayCost = subscriptionTotal * 0.1; 
         displaySavings = internalSavings * 0.8;
         focusLabel = "Proprietary Logic Economics";
       } else {
-        // Default small slice for other layers
         displayCost = (cheapTotal + premiumTotal) * 0.05;
         focusLabel = `${selectedNodeId.replace('_', ' ').toUpperCase()} Focus`;
       }
@@ -159,7 +255,7 @@ export function CostSummaryPanel() {
       verificationTotal,
       phoneTotal
     };
-  }, [currentPreset, billingPeriod, assumptions, costViewMode, selectedNodeId]);
+  }, [currentPreset, billingPeriod, assumptions, costViewMode, selectedNodeId, targetScale, emailRatio, catchAllRatio, mobileRatio]);
 
   const {
       verified_emails,
@@ -180,7 +276,13 @@ export function CostSummaryPanel() {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-primary">{focusLabel}</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-primary">{focusLabel}</h3>
+        <RatioSettingsPopover 
+          ratios={{ email: emailRatio, catchAll: catchAllRatio, mobile: mobileRatio }} 
+          setRatios={setRatios} 
+        />
+      </div>
       <p className="text-[11px] text-tertiary leading-tight">
         Based on selected providers, assumptions, and routing rules. Accuracy scores are relative, modeled from provider mix.
       </p>

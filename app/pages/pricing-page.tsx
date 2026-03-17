@@ -36,6 +36,38 @@ export function PricingPage() {
             </div>
           </section>
 
+          {/* Waterfall Effect Strategy */}
+          <section className="rounded-2xl border border-secondary bg-secondary_subtle p-8 space-y-6">
+            <div className="flex items-center gap-3">
+              <Zap className="size-6 text-brand" />
+              <h2 className="text-xl font-bold text-primary">The Waterfall Strategy</h2>
+            </div>
+            
+            <div className="grid gap-4 md:grid-cols-5">
+              {[
+                { step: 1, label: "Cheap Providers", desc: "First pass using lowest-cost databases." },
+                { step: 2, label: "Pattern Engine", desc: "Test against known corporate naming logic." },
+                { step: 3, label: "Free Lookups", desc: "Check availability without credit burn." },
+                { step: 4, label: "Validation", desc: "Multi-signal SMTP handshake to confirm." },
+                { step: 5, label: "Premium Fallback", desc: "Expensive triggers only if all else fails." }
+              ].map((item) => (
+                <div key={item.step} className="relative flex flex-col gap-2 rounded-xl bg-primary p-4 shadow-sm border border-secondary">
+                  <div className="absolute -top-2 -left-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white">
+                    {item.step}
+                  </div>
+                  <div className="text-xs font-bold text-primary mt-2">{item.label}</div>
+                  <div className="text-[10px] text-tertiary leading-relaxed">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-xl bg-brand-secondary/20 p-4 border border-brand/10">
+              <p className="text-xs text-brand font-medium leading-relaxed">
+                <strong>Economic Impact:</strong> By routing 85% of traffic through the first 4 steps and utilizing unlimited lookup packages, we preserve premium credits for high-value targets, reducing the blended cost per lead by up to <strong>75-80%</strong> compared to single-provider stacks.
+              </p>
+            </div>
+          </section>
+
           {/* Pricing Table */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
@@ -161,7 +193,7 @@ export function PricingPage() {
                 <h3 className="font-bold text-primary">Unit vs. Package Variance</h3>
               </div>
               <p className="text-xs text-secondary leading-relaxed">
-                Many tools (e.g., RocketReach) list at high retail prices for small volumes. Our stack assumes a negotiated <strong>$0.05/contact</strong> efficiency rate by leveraging bulk credit purchases and internal deduplication before external triggers.
+                Many tools (e.g., RocketReach) list at high retail prices for small volumes. Our stack assumes a negotiated <strong>$0.16/contact</strong> efficiency rate by leveraging bulk credit purchases and internal deduplication before external triggers.
               </p>
             </div>
             <div className="rounded-xl border border-secondary p-5 space-y-3">
@@ -171,38 +203,6 @@ export function PricingPage() {
               </div>
               <p className="text-xs text-secondary leading-relaxed">
                 For every 100k mobile lookups we perform, we effectively "buy" that data once. In Year 2, the resolution occurs against our Internal Master DB, reducing the $2.5M identity resolution spend significantly as hit rates move internal.
-              </p>
-            </div>
-          </section>
-
-          {/* Waterfall Effect Strategy */}
-          <section className="rounded-2xl border border-secondary bg-secondary_subtle p-8 space-y-6">
-            <div className="flex items-center gap-3">
-              <Zap className="size-6 text-brand" />
-              <h2 className="text-xl font-bold text-primary">The Waterfall Strategy</h2>
-            </div>
-            
-            <div className="grid gap-4 md:grid-cols-5">
-              {[
-                { step: 1, label: "Cheap Providers", desc: "First pass using lowest-cost databases." },
-                { step: 2, label: "Pattern Engine", desc: "Test against known corporate naming logic." },
-                { step: 3, label: "Free Lookups", desc: "Check availability without credit burn." },
-                { step: 4, label: "Validation", desc: "Multi-signal SMTP handshake to confirm." },
-                { step: 5, label: "Premium Fallback", desc: "Expensive triggers only if all else fails." }
-              ].map((item) => (
-                <div key={item.step} className="relative flex flex-col gap-2 rounded-xl bg-primary p-4 shadow-sm border border-secondary">
-                  <div className="absolute -top-2 -left-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white">
-                    {item.step}
-                  </div>
-                  <div className="text-xs font-bold text-primary mt-2">{item.label}</div>
-                  <div className="text-[10px] text-tertiary leading-relaxed">{item.desc}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="rounded-xl bg-brand-secondary/20 p-4 border border-brand/10">
-              <p className="text-xs text-brand font-medium leading-relaxed">
-                <strong>Economic Impact:</strong> By routing 85% of traffic through the first 4 steps and utilizing unlimited lookup packages, we preserve premium credits for high-value targets, reducing the blended cost per lead by up to <strong>75-80%</strong> compared to single-provider stacks.
               </p>
             </div>
           </section>

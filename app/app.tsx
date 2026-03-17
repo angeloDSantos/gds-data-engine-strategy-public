@@ -39,7 +39,9 @@ function Header() {
     duplicatePreset, 
     removePreset,
     confidenceMode,
-    setConfidenceMode 
+    setConfidenceMode,
+    targetScale,
+    setTargetScale 
   } = useDiagramStore();
 
   const handlePresetAction = (id: string) => {
@@ -115,10 +117,27 @@ function Header() {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 sm:gap-6 px-3 sm:px-4 py-1.5 rounded-xl bg-secondary/50 border border-secondary shadow-inner">
+        <div className="flex items-center gap-2">
+          <input 
+            type="number" 
+            className="w-12 sm:w-16 h-8 rounded-lg border border-secondary bg-primary px-1.5 sm:px-2 text-xs sm:text-sm font-bold text-brand focus:ring-2 focus:ring-brand outline-none transition-all shadow-sm"
+            value={targetScale}
+            step={0.1}
+            min={0.1}
+            onChange={(e) => setTargetScale(parseFloat(e.target.value) || 0)}
+          />
+          <div className="flex flex-col">
+            <span className="text-[8px] sm:text-[10px] font-bold text-primary uppercase tracking-wider">M Contacts</span>
+            <span className="text-[7px] sm:text-[8px] text-tertiary uppercase leading-none">Scale</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 sm:gap-4">
         {isExplorer && (
           <>
-            <div className="flex items-center gap-2 border-r border-secondary pr-4">
+            <div className="hidden md:flex items-center gap-2 border-r border-secondary pr-4">
               {presets.length <= 1 ? (
                 <Button 
                   size="sm" 
@@ -165,9 +184,9 @@ function Header() {
                 selectedKey={confidenceMode}
                 onSelectionChange={(k) => k && setConfidenceMode(k as any)}
                 items={[
-                  { id: "conservative", label: "Conservative" },
-                  { id: "base", label: "Base" },
-                  { id: "aggressive", label: "Aggressive" },
+                  { id: "conservative", label: "Premium Stack" },
+                  { id: "base", label: "Balanced Stack" },
+                  { id: "aggressive", label: "Economy Stack" },
                 ]}
               >
                 {(item: any) => <Select.Item id={item.id} label={item.label} />}

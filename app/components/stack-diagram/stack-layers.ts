@@ -48,7 +48,7 @@ export const stackLayers: StackLayerDef[] = [
     label: "Company Intelligence",
     purpose: "Identify target companies, create master company graph",
     narrative: "Checks master database for existing matching companies before ingesting market signals. Excludes existing records and adds new, validated company profiles to the deduplicated master graph.",
-    providers: ["crunchbase", "linkedin", "internal"],
+    providers: ["crunchbase", "apollo", "internal"],
     subLayers: ["company record ingestion", "dedupe", "domain resolution seed"],
     outputSpec: "{Company Name - HQ Location - Operating Locations}",
     crmInteraction: "input",

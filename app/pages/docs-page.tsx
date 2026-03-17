@@ -240,24 +240,43 @@ export function DocsPage() {
               </header>
 
               <div className="prose prose-sm prose-slate max-w-none text-secondary">
-                <div className="mb-6 rounded-lg border border-brand/20 bg-brand/5 p-4 flex gap-4">
-                   <Zap className="size-6 text-brand shrink-0" />
-                   <div>
-                     <h4 className="text-primary font-bold mb-1">Cloudflare /crawl Integration</h4>
-                     <p className="text-sm text-tertiary leading-relaxed">
-                       Traditional scraping is dead. By leveraging the <strong>Cloudflare /crawl</strong> endpoint, we receive the full HTML & DOM of any website with 1 command—no scraping required.
-                     </p>
-                     <p className="mt-2 text-xs text-brand font-medium">
-                       <a href="https://developers.cloudflare.com/changelog/post/2026-03-10-br-crawl-endpoint/" target="_blank" rel="noreferrer" className="underline hover:text-brand-secondary">
-                         Read the /crawl release notes →
-                       </a>
-                     </p>
+                <div className="mb-8 rounded-2xl border border-brand/30 bg-brand/5 p-8 flex flex-col gap-6 shadow-sm ring-1 ring-brand/10">
+                   <div className="flex items-center gap-4">
+                     <div className="flex size-12 items-center justify-center rounded-xl bg-brand text-white shadow-lg">
+                       <Zap className="size-6" />
+                     </div>
+                     <div>
+                       <h2 className="text-2xl font-bold text-primary">Cloudflare /crawl Engine</h2>
+                       <p className="text-secondary font-medium">Enterprise-grade automation made essentially free.</p>
+                     </div>
+                   </div>
+
+                   <p className="text-base text-secondary leading-relaxed italic border-l-4 border-brand pl-6">
+                     The new <strong>Cloudflare /crawl</strong> command allows the user to receive the full HTML & DOM of any website with <strong>1 command—no scraping required.</strong>
+                   </p>
+
+                   <div className="grid gap-4 sm:grid-cols-2">
+                     <div className="rounded-xl bg-white p-4 border border-secondary shadow-sm">
+                       <h4 className="text-brand font-bold mb-1 uppercase text-[10px] tracking-widest">Performance</h4>
+                       <p className="text-xs text-tertiary">Get full page data and parse it in <strong>milliseconds</strong>. No more waiting for browser renders or headless overhead.</p>
+                     </div>
+                     <div className="rounded-xl bg-white p-4 border border-secondary shadow-sm">
+                       <h4 className="text-brand font-bold mb-1 uppercase text-[10px] tracking-widest">Accessibility</h4>
+                       <p className="text-xs text-tertiary">Bypass proxy rotation and anti-scraping stacks entirely by going direct to the edge.</p>
+                     </div>
+                   </div>
+
+                   <div className="pt-2">
+                     <a 
+                       href="https://developers.cloudflare.com/changelog/post/2026-03-10-br-crawl-endpoint/" 
+                       target="_blank" 
+                       rel="noreferrer" 
+                       className="inline-flex items-center gap-2 text-sm font-bold text-brand hover:text-brand-secondary transition-colors"
+                     >
+                       Visit the Cloudflare /crawl Documentation →
+                     </a>
                    </div>
                 </div>
-
-                <p>
-                  This leap in technology allows us to get full page data and parse it in <strong>milliseconds</strong>, making enterprise-grade automation essentially free.
-                </p>
 
                 <h3 className="text-xl font-semibold text-primary mt-8">Impact on Economic Efficiency</h3>
                 <ul className="list-disc space-y-3 pl-5">
@@ -266,7 +285,7 @@ export function DocsPage() {
                   <li><strong>Scalability:</strong> We can process 10,000+ domains per hour with near-zero latency, populating the Master DB at light speed.</li>
                 </ul>
 
-                <p className="mt-6 font-medium text-primary">
+                <p className="mt-10 p-6 rounded-xl bg-secondary/30 border border-secondary text-center font-medium text-primary">
                   The /crawl engine is the "fuel" that powers our pattern recognition, ensuring we only use paid credits for the most difficult targets.
                 </p>
               </div>

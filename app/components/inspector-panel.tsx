@@ -49,12 +49,12 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                         <h4 className="text-[10px] font-bold uppercase tracking-wider text-quaternary">Provider Overview</h4>
                         <div className="mt-2 flex items-center gap-2">
                             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase bg-secondary text-primary">
-                                {config?.tier.replace("_", " ")} Tier
+                                {(config.tier || 'standard').replace("_", " ")} Tier
                             </span>
                             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase bg-brand-secondary text-brand">
-                                {config?.pricingModel.type === 'usage' ? `$${config.pricingModel.unitCost.toFixed(4)} / credit` : 
-                                 config?.pricingModel.type === 'seatContract' ? 'Seat-based' :
-                                 config?.pricingModel.type === 'planCredits' ? 'Plan-based' : 'Quote required'}
+                                {config.pricingModel.type === 'usage' ? `$${config.pricingModel.unitCost.toFixed(4)} / credit` : 
+                                 config.pricingModel.type === 'seatContract' ? 'Seat-based' :
+                                 config.pricingModel.type === 'planCredits' ? 'Plan-based' : 'Quote required'}
                             </span>
                         </div>
                         <p className="mt-2 text-xs leading-relaxed text-secondary italic">
@@ -103,6 +103,7 @@ export function InspectorPanel({ onClose }: { onClose?: () => void }) {
                         </div>
                     </section>
                 </div>
+                )}
 
                 <div className="p-4 border-t border-secondary bg-secondary_subtle">
                     <Button color="primary" className="w-full justify-center">Toggle Provider</Button>

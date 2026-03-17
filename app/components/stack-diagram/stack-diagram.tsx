@@ -90,22 +90,29 @@ function StackDiagramInner() {
     }
   };
 
+  // Responsive check for diagram padding
+  const isMobile = useMemo(() => typeof window !== 'undefined' ? window.innerWidth < 1024 : false, []);
+
   useEffect(() => {
     setNodes(initialNodes);
     setEdges(initialEdges);
 
     requestAnimationFrame(() => {
       if (isDetailView) {
-        reactFlow.fitView({ padding: 0.15, duration: 400 });
+        reactFlow.fitView({ padding: isMobile ? 0.05 : 0.15, duration: 400 });
       } else {
         // Find layer_1 and focus it initially with a tight, premium zoom
         const startNode = initialNodes.find(n => n.id === "layer_1");
         if (startNode) {
-          reactFlow.fitView({ nodes: [startNode], padding: 0.8, duration: 400 });
+          reactFlow.fitView({ 
+            nodes: [startNode], 
+            padding: isMobile ? 0.4 : 0.8, 
+            duration: 400 
+          });
         }
       }
     });
-  }, [initialNodes, initialEdges, reactFlow, setEdges, setNodes, isDetailView]);
+  }, [initialNodes, initialEdges, reactFlow, setEdges, setNodes, isDetailView, isMobile]);
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: { id: string }) => {
@@ -197,20 +204,20 @@ function StackDiagramInner() {
 
         {/* Storyteller Navigation Overlay (Overview Only) */}
         {!isDetailView && (
-          <Panel position="bottom-center" className="mb-4 w-full max-w-xl px-4 z-[100]">
-            <div className="flex flex-col gap-3 rounded-2xl border border-brand/20 bg-primary/95 p-4 shadow-2xl backdrop-blur-md ring-4 ring-brand/5">
-              <div className="flex items-center justify-between">
+          <Panel position="bottom-center" className="mb-4 w-full max-w-xl px-2 sm:px-4 z-[100]">
+            <div className="flex flex-col gap-2 sm:gap-3 rounded-2xl border border-brand/20 bg-primary/95 p-3 sm:p-4 shadow-2xl backdrop-blur-md ring-4 ring-brand/5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex flex-col">
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-brand">
+                  <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-brand">
                     Phase {currentPhase} of {maxPhases}
                   </span>
-                  <h2 className="text-lg font-bold text-primary leading-tight">{activeLayerLabel}</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-primary leading-tight">{activeLayerLabel}</h2>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={prevStage}
                     disabled={currentIndex === 0}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-secondary bg-primary text-secondary transition-all hover:bg-secondary_subtle disabled:opacity-30"
+                    className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-secondary bg-primary text-secondary transition-all hover:bg-secondary_subtle disabled:opacity-30"
                   >
                     <ChevronLeft className="size-5" />
                   </button>
@@ -222,9 +229,10 @@ function StackDiagramInner() {
                           <button
                             key={targetId}
                             onClick={() => goToStage(targetId)}
-                            className="flex h-10 px-4 gap-2 items-center justify-center rounded-xl bg-brand-solid text-white text-[11px] font-bold shadow-lg transition-all hover:bg-brand-solid_hover hover:scale-105 active:scale-95"
+                            className="flex h-9 sm:h-10 px-3 sm:px-4 gap-2 items-center justify-center rounded-xl bg-brand-solid text-white text-[10px] sm:text-[11px] font-bold shadow-lg transition-all hover:bg-brand-solid_hover hover:scale-105 active:scale-95"
                           >
-                            <span>Path: {targetLayer?.label}</span>
+                            <span className="hidden sm:inline">Path: {targetLayer?.label}</span>
+                            <span className="sm:hidden">Next</span>
                             <ChevronRight className="size-4" />
                           </button>
                         );
@@ -234,23 +242,23 @@ function StackDiagramInner() {
                     <button
                       onClick={nextStage}
                       disabled={currentIndex === allLayerIds.length - 1}
-                      className="flex h-10 px-6 gap-2 items-center justify-center rounded-xl bg-brand-solid text-white text-sm font-bold shadow-lg transition-all hover:bg-brand-solid_hover hover:scale-105 active:scale-95 disabled:opacity-30 disabled:hover:scale-100"
+                      className="flex h-9 sm:h-10 px-4 sm:px-6 gap-2 items-center justify-center rounded-xl bg-brand-solid text-white text-xs sm:text-sm font-bold shadow-lg transition-all hover:bg-brand-solid_hover hover:scale-105 active:scale-95 disabled:opacity-30 disabled:hover:scale-100"
                     >
-                      <span>Next Stage</span>
+                      <span>Next</span>
                       <ChevronRight className="size-5" />
                     </button>
                   )}
                   <button
                     onClick={() => setSelectedLayer(activeStageId)}
-                    className="ml-2 flex h-10 items-center gap-1.5 rounded-xl bg-brand-secondary px-4 py-2 text-xs font-bold text-brand transition-all hover:bg-brand-secondary/80 active:scale-95"
+                    className="flex h-9 sm:h-10 items-center gap-1.5 rounded-xl bg-brand-secondary px-3 sm:px-4 py-2 text-[10px] sm:text-xs font-bold text-brand transition-all hover:bg-brand-secondary/80 active:scale-95"
                   >
                     <Play className="size-3.5 fill-current" />
-                    More Info
+                    <span className="hidden xs:inline">Info</span>
                   </button>
                 </div>
               </div>
 
-              {activeLayerNarrative && (
+              {activeLayerNarrative && !isMobile && (
                 <p className="text-[11px] leading-relaxed text-secondary italic border-t border-secondary pt-2">
                   {activeLayerNarrative}
                 </p>

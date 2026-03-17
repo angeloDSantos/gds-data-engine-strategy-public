@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, AlertTriangle, XCircle } from "@untitledui/icons";
+import { CheckCircle, AlertTriangle, XCircle, Zap } from "@untitledui/icons";
 import { Badge } from "@/components/base/badges/badges";
 
 const riskLevels = {
@@ -81,6 +81,28 @@ export function AgentExplorerPage() {
     <div className="flex h-full flex-col bg-secondary overflow-hidden">
       <main className="flex-1 overflow-y-auto px-4 py-8">
         <div className="mx-auto max-w-4xl space-y-12">
+        {/* Cloudflare /crawl Highlight */}
+        <section className="rounded-2xl border border-brand/20 bg-brand-secondary/5 p-6 shadow-sm ring-1 ring-brand/5">
+          <div className="flex gap-4">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand text-white">
+              <Zap className="size-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-brand">Cloudflare /crawl — Enterprise Automation for Free</h3>
+              <p className="mt-1 text-sm text-secondary leading-relaxed">
+                Traditional scraping overhead is eliminated. Using the <strong>/crawl</strong> endpoint, we receive the full HTML & DOM of any website with <strong>1 command</strong>. No proxies, no headless browser overhead, and millisecond parsing. Allowing us to get full page data & parse it in milliseconds.
+              </p>
+              <a 
+                href="https://developers.cloudflare.com/changelog/post/2026-03-10-br-crawl-endpoint/" 
+                target="_blank" rel="noreferrer" 
+                className="mt-2 inline-block text-xs font-bold text-brand hover:underline"
+              >
+                Read the release notes →
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* Agent infrastructure blocks */}
         <section>
           <h2 className="mb-4 text-md font-semibold text-primary">Agent infrastructure</h2>
