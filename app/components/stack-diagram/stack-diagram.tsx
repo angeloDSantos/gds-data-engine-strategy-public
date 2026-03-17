@@ -5,6 +5,7 @@ import {
   Controls,
   useNodesState,
   useEdgesState,
+  useReactFlow,
   Panel,
   ReactFlowProvider,
   type NodeTypes,
